@@ -1,0 +1,49 @@
+name: Release Minor
+
+on: workflow_dispatch
+
+jobs:
+  release-minor:
+    name: Release Minor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+      - name: Set minor version
+        id: minor_version
+        run: |
+          MINOR_VERSION=$(npm version --no-git-tag-version --no-commit-hooks minor)
+          node scripts/update-version.js $MINOR_VERSION
+          npm install
+          echo "MINOR_VERSION=$MINOR_VERSION" >> $GITHUB_OUTPUT
+      - name: Commit, push and create tag
+        uses: EndBug/add-and-commit@v9
+        with:
+          fetch: true
+          default_author: github_actions
+          message: Release ${{ steps.minor_version.outputs.MINOR_VERSION }}
+          pathspec_error_handling: exitImmediately
+          push: true
+          tag: ${{ steps.minor_version.outputs.MINOR_VERSION }}
+      - name: Set next dev version
+        id: dev_version
+        run: |
+          DEV_VERSION=$(npm version --no-git-tag-version --no-commit-hooks --preid beta prerelease)
+          node scripts/update-version.js $DEV_VERSION
+          npm install
+          echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_OUTPUT
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9
+        with:
+          fetch: true
+          default_author: github_actions
+          message: Set next dev version to ${{ steps.dev_version.outputs.DEV_VERSION }}
+          pathspec_error_handling: exitImmediately
+          push: true
