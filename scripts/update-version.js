@@ -20,8 +20,8 @@ filesToUpdate.forEach((file) => {
     }
 
     if (file.indexOf(".json") === -1) {
-      const marketingVersionFieldRegEx = /MARKETING_VERSION\s*=\s*"[\w.-]+";/g;
-      const currentVersionFieldRegEx = /CURRENT_PROJECT_VERSION\s*=\s*"[\w.-]+";/g;
+      const marketingVersionFieldRegEx = /MARKETING_VERSION\s*=\s*"?[\w.-]+"?;/g;
+      const currentVersionFieldRegEx = /CURRENT_PROJECT_VERSION\s*=\s*"?[\w.-]+"?;/g;
       let newContent = data.replaceAll(marketingVersionFieldRegEx, `MARKETING_VERSION = "${newVersion}";`);
       newContent = newContent.replaceAll(currentVersionFieldRegEx, `CURRENT_PROJECT_VERSION = "${newVersion}";`)
       fs.writeFile(file, newContent, (err1) => {
