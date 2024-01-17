@@ -9,13 +9,13 @@
 
 <div align="center">
 
-![iTunes App Store](https://img.shields.io/itunes/v/6476014369?label=App%20Store%20(iOS))
+![iTunes App Store](https://img.shields.io/itunes/v/6476014369?label=App%20Store)
 
 </div>
 
 ## Quick start
 
-* [App Store (iOS)](https://apps.apple.com/fr/app/aria2-integration/id6476014369)
+* [App Store](https://apps.apple.com/fr/app/aria2-integration/id6476014369)
 
 ## How to build
 
