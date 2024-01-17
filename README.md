@@ -9,9 +9,13 @@
 
 <div align="center">
 
+![iTunes App Store](https://img.shields.io/itunes/v/6476014369?label=App%20Store%20(iOS))
+
 </div>
 
 ## Quick start
+
+* [App Store (iOS)](https://apps.apple.com/fr/app/aria2-integration/id6476014369)
 
 ## How to build
 
@@ -46,7 +50,8 @@ addressed yet, [please open a new issue](https://github.com/baptistecdr/aria2-in
 
 ## Contributing
 
-Contributions are welcome!
+* Contributions are welcome!
+    * They are rewarded by a redeem code.
 
 ## Thanks to
 
