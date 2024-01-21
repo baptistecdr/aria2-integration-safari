@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Shared (App)
-//
-//  Created by Baptiste Coudray on 06/01/2024.
-//
-
 import WebKit
 
 #if os(iOS)

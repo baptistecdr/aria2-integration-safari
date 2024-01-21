@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  macOS (App)
-//
-//  Created by Baptiste Coudray on 06/01/2024.
-//
-
 import Cocoa
 
 @main

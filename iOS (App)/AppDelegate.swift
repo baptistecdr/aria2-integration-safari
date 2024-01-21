@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  iOS (App)
-//
-//  Created by Baptiste Coudray on 06/01/2024.
-//
-
 import UIKit
 
 @main
