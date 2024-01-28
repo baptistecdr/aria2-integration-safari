@@ -51,18 +51,21 @@ function ServerTab({ server }: Props) {
     aria2.call("aria2.purgeDownloadResult");
   }
 
+  let updateTasks = async () => {
+    try {
+      const gs = await getGlobalStat(aria2);
+      const ts = await getTasks(aria2, gs.numWaiting, gs.numStopped);
+      setGlobalStat(gs);
+      setTasks(ts);
+    } catch (e: any) {
+      setDefaultMessage(i18n("serverError"));
+    }
+    setLoading(false);
+  }
+
   useEffect(() => {
-    const intervalId = window.setInterval(async () => {
-      try {
-        const gs = await getGlobalStat(aria2);
-        const ts = await getTasks(aria2, gs.numWaiting, gs.numStopped);
-        setGlobalStat(gs);
-        setTasks(ts);
-      } catch (e: any) {
-        setDefaultMessage(i18n("serverError"));
-      }
-      setLoading(false);
-    }, 1000);
+    updateTasks()
+    const intervalId = window.setInterval(updateTasks, 1000);
     return () => {
       clearInterval(intervalId);
     };
@@ -128,7 +131,7 @@ function ServerTab({ server }: Props) {
           </Col>
         </Row>
       )}
-      {!showAddTask && tasks.map((task) => <ServerTask key={task.gid} task={task} aria2={aria2} />)}
+      {!showAddTask && tasks.map((task) => <ServerTask key={task.gid} task={task} aria2={aria2} server={server} />)}
     </Container>
   );
 }

@@ -3,27 +3,32 @@ import { Duration } from "luxon";
 import browser from "webextension-polyfill";
 import { filesize, FileSizeOptionsBase } from "filesize";
 import { useEffect, useState } from "react";
-import { Task } from "../models/task";
-import { basename } from "../../stdlib";
+import { Task } from "@/popup/models/task";
+import { basename } from "@/stdlib";
 import ServerTaskManagement from "./server-task-management";
-import i18n from "../../i18n";
+import i18n from "@/i18n";
+import Server from "@/models/server";
 
 interface Props {
   task: Task;
+  server: Server;
   aria2: any;
 }
 
 async function getFilename(task: Task): Promise<string> {
+  let fname = "";
   if (task.bittorrent && task.bittorrent.info) {
-    return task.bittorrent.info.name;
+    fname = task.bittorrent.info.name;
+  } else if (task.files[0].path !== "") {
+    fname = await basename(task.files[0].path);
+  } else {
+    fname = await basename(task.files[0].uris[0].uri);
   }
-  if (task.files[0].path !== "") {
-    return basename(task.files[0].path);
-  }
-  return basename(task.files[0].uris[0].uri);
+  task.cachedFileName = fname
+  return fname
 }
 
-function ServerTask({ task, aria2 }: Props) {
+function ServerTask({ task, server, aria2 }: Props) {
   const filesizeParameters = { base: 2 } as FileSizeOptionsBase;
   const [filename, setFilename] = useState("");
 
@@ -106,7 +111,7 @@ function ServerTask({ task, aria2 }: Props) {
         </Row>
       </Col>
       <Col xs={3} sm={3} className="align-self-start text-end">
-        <ServerTaskManagement task={task} aria2={aria2} />
+        <ServerTaskManagement task={task} aria2={aria2} server={server} />
       </Col>
       <Col xs={12} sm={12}>
         <div className="progress position-relative">

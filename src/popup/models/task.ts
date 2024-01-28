@@ -50,6 +50,8 @@ export class Task {
 
   errorMessage: string;
 
+  cachedFileName?: string;
+
   constructor(
     completedLength: number,
     connections: number,

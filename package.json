@@ -7,7 +7,7 @@
     "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,ts,jsx,tsx}' --fix",
     "build": "CI= tsc && vite build --emptyOutDir",
-    "build:watch": "nodemon --watch . --exec npm run build"
+    "build:watch": "nodemon --watch . --exec yarn run build"
   },
   "dependencies": {
     "@stdlib/regexp-basename-posix": "0.1.1",
@@ -31,14 +31,15 @@
     "webextension-polyfill": "0.10.0"
   },
   "devDependencies": {
+    "vite-tsconfig-paths": "^4.3.1",
     "@types/bootstrap": "5.2.10",
     "@types/jest": "29.5.11",
     "@types/luxon": "3.4.2",
-    "@types/node": "20.11.8",
+    "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-bootstrap": "0.32.35",
     "@types/react-dom": "18.2.18",
-    "@types/uuid": "9.0.8",
+    "@types/uuid": "9.0.7",
     "@types/webextension-polyfill": "0.10.7",
     "@typescript-eslint/eslint-plugin": "6.19.1",
     "@typescript-eslint/parser": "6.19.1",
