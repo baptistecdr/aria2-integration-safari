@@ -51,7 +51,7 @@ function ServerTab({ server }: Props) {
     aria2.call("aria2.purgeDownloadResult");
   }
 
-  let updateTasks = async () => {
+  async function updateTasks() {
     try {
       const gs = await getGlobalStat(aria2);
       const ts = await getTasks(aria2, gs.numWaiting, gs.numStopped);
@@ -64,7 +64,7 @@ function ServerTab({ server }: Props) {
   }
 
   useEffect(() => {
-    updateTasks()
+    updateTasks();
     const intervalId = window.setInterval(updateTasks, 1000);
     return () => {
       clearInterval(intervalId);

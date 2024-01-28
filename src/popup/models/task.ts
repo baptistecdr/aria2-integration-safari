@@ -50,7 +50,7 @@ export class Task {
 
   errorMessage: string;
 
-  cachedFileName?: string;
+  cachedFilename?: string;
 
   constructor(
     completedLength: number,

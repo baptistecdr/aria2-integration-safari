@@ -16,16 +16,16 @@ interface Props {
 }
 
 async function getFilename(task: Task): Promise<string> {
-  let fname = "";
+  let filename = "";
   if (task.bittorrent && task.bittorrent.info) {
-    fname = task.bittorrent.info.name;
+    filename = task.bittorrent.info.name;
   } else if (task.files[0].path !== "") {
-    fname = await basename(task.files[0].path);
+    filename = await basename(task.files[0].path);
   } else {
-    fname = await basename(task.files[0].uris[0].uri);
+    filename = await basename(task.files[0].uris[0].uri);
   }
-  task.cachedFileName = fname
-  return fname
+  task.cachedFilename = filename
+  return filename
 }
 
 function ServerTask({ task, server, aria2 }: Props) {

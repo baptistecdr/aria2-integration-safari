@@ -16,7 +16,7 @@ function ServerTaskManagement({ aria2, server, task }: Props) {
     } else if (task.isPaused()) {
       aria2.call("aria2.unpause", task.gid);
     } else if (task.isError()) {
-      captureURL(aria2, server, task.files[0].uris[0].uri, "", "", undefined, task.cachedFileName)
+      captureURL(aria2, server, task.files[0].uris[0].uri, "", "", undefined, task.cachedFilename)
     }
   };
 
