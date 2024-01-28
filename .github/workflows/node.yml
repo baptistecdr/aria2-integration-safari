@@ -1,0 +1,23 @@
+name: Node
+
+on:
+  - pull_request
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Clone repository
+      - uses: actions/setup-node@v4
+        name: Setup Node.js
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install Dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Compile Extension
+        run: npm run build
