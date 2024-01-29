@@ -25,7 +25,14 @@ module.exports = {
     ecmaVersion: 2022,
     sourceType: "module"
   },
-  plugins: [],
+  plugins: [
+    "import"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   rules: {
     "jsx-a11y/label-has-associated-control": [
       "error",

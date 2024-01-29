@@ -50,6 +50,8 @@ export class Task {
 
   errorMessage: string;
 
+  cachedFilename?: string;
+
   constructor(
     completedLength: number,
     connections: number,
@@ -100,6 +102,10 @@ export class Task {
 
   isWaiting(): boolean {
     return this.status === TaskStatus.Waiting;
+  }
+
+  saveFilename(filename: string) {
+    this.cachedFilename = filename;
   }
 }
 

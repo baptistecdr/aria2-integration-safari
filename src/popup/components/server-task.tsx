@@ -3,32 +3,39 @@ import { Duration } from "luxon";
 import browser from "webextension-polyfill";
 import { filesize, FileSizeOptionsBase } from "filesize";
 import { useEffect, useState } from "react";
-import { Task } from "../models/task";
-import { basename } from "../../stdlib";
+import { Task } from "@/popup/models/task";
+import { basename } from "@/stdlib";
+import i18n from "@/i18n";
+import Server from "@/models/server";
 import ServerTaskManagement from "./server-task-management";
-import i18n from "../../i18n";
 
 interface Props {
   task: Task;
+  server: Server;
   aria2: any;
 }
 
 async function getFilename(task: Task): Promise<string> {
+  let filename = "";
   if (task.bittorrent && task.bittorrent.info) {
-    return task.bittorrent.info.name;
+    filename = task.bittorrent.info.name;
+  } else if (task.files[0].path !== "") {
+    filename = await basename(task.files[0].path);
+  } else {
+    filename = await basename(task.files[0].uris[0].uri);
   }
-  if (task.files[0].path !== "") {
-    return basename(task.files[0].path);
-  }
-  return basename(task.files[0].uris[0].uri);
+  return filename;
 }
 
-function ServerTask({ task, aria2 }: Props) {
+function ServerTask({ task, server, aria2 }: Props) {
   const filesizeParameters = { base: 2 } as FileSizeOptionsBase;
   const [filename, setFilename] = useState("");
 
   useEffect(() => {
-    getFilename(task).then((it) => setFilename(it));
+    getFilename(task).then((it) => {
+      task.saveFilename(it);
+      setFilename(it);
+    });
   }, [task]);
 
   function toFirstUppercase(s: string): string {
@@ -106,7 +113,7 @@ function ServerTask({ task, aria2 }: Props) {
         </Row>
       </Col>
       <Col xs={3} sm={3} className="align-self-start text-end">
-        <ServerTaskManagement task={task} aria2={aria2} />
+        <ServerTaskManagement task={task} aria2={aria2} server={server} />
       </Col>
       <Col xs={12} sm={12}>
         <div className="progress position-relative">
