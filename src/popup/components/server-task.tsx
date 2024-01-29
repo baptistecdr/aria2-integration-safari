@@ -5,9 +5,9 @@ import { filesize, FileSizeOptionsBase } from "filesize";
 import { useEffect, useState } from "react";
 import { Task } from "@/popup/models/task";
 import { basename } from "@/stdlib";
-import ServerTaskManagement from "./server-task-management";
 import i18n from "@/i18n";
 import Server from "@/models/server";
+import ServerTaskManagement from "./server-task-management";
 
 interface Props {
   task: Task;
@@ -24,8 +24,7 @@ async function getFilename(task: Task): Promise<string> {
   } else {
     filename = await basename(task.files[0].uris[0].uri);
   }
-  task.cachedFilename = filename
-  return filename
+  return filename;
 }
 
 function ServerTask({ task, server, aria2 }: Props) {
@@ -33,7 +32,10 @@ function ServerTask({ task, server, aria2 }: Props) {
   const [filename, setFilename] = useState("");
 
   useEffect(() => {
-    getFilename(task).then((it) => setFilename(it));
+    getFilename(task).then((it) => {
+      task.saveFilename(it);
+      setFilename(it);
+    });
   }, [task]);
 
   function toFirstUppercase(s: string): string {

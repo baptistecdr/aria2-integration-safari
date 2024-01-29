@@ -103,6 +103,10 @@ export class Task {
   isWaiting(): boolean {
     return this.status === TaskStatus.Waiting;
   }
+
+  saveFilename(filename: string) {
+    this.cachedFilename = filename;
+  }
 }
 
 export interface Bittorrent {
