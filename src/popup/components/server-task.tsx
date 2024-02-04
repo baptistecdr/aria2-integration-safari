@@ -2,41 +2,19 @@ import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { Duration } from "luxon";
 import browser from "webextension-polyfill";
 import { filesize, FileSizeOptionsBase } from "filesize";
-import { useEffect, useState } from "react";
 import { Task } from "@/popup/models/task";
-import { basename } from "@/stdlib";
 import i18n from "@/i18n";
 import Server from "@/models/server";
 import ServerTaskManagement from "./server-task-management";
 
 interface Props {
-  task: Task;
   server: Server;
   aria2: any;
-}
-
-async function getFilename(task: Task): Promise<string> {
-  let filename = "";
-  if (task.bittorrent && task.bittorrent.info) {
-    filename = task.bittorrent.info.name;
-  } else if (task.files[0].path !== "") {
-    filename = await basename(task.files[0].path);
-  } else {
-    filename = await basename(task.files[0].uris[0].uri);
-  }
-  return filename;
+  task: Task;
 }
 
 function ServerTask({ task, server, aria2 }: Props) {
   const filesizeParameters = { base: 2 } as FileSizeOptionsBase;
-  const [filename, setFilename] = useState("");
-
-  useEffect(() => {
-    getFilename(task).then((it) => {
-      task.saveFilename(it);
-      setFilename(it);
-    });
-  }, [task]);
 
   function toFirstUppercase(s: string): string {
     return s.charAt(0).toUpperCase() + s.slice(1);
@@ -89,11 +67,11 @@ function ServerTask({ task, server, aria2 }: Props) {
               placement="top"
               overlay={
                 <Tooltip id="tooltip-bottom">
-                  <small>{filename}</small>
+                  <small>{task.getFilename()}</small>
                 </Tooltip>
               }
             >
-              <span>{filename}</span>
+              <span>{task.getFilename()}</span>
             </OverlayTrigger>
           </Col>
           <Col xs={12} sm={12} className="align-self-start ps-4 text-start">

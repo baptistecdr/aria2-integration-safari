@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { Transform, Type } from "class-transformer";
+import { basename } from "path";
 import { File } from "./file";
 
 export enum TaskStatus {
@@ -50,7 +51,7 @@ export class Task {
 
   errorMessage: string;
 
-  cachedFilename?: string;
+  dir: string;
 
   constructor(
     completedLength: number,
@@ -64,6 +65,7 @@ export class Task {
     uploadLength: number,
     uploadSpeed: number,
     errorMessage: string,
+    dir: string,
     bittorrent?: Bittorrent,
   ) {
     this.bittorrent = bittorrent;
@@ -78,6 +80,7 @@ export class Task {
     this.uploadLength = uploadLength;
     this.uploadSpeed = uploadSpeed;
     this.errorMessage = errorMessage;
+    this.dir = dir;
   }
 
   isActive(): boolean {
@@ -104,8 +107,14 @@ export class Task {
     return this.status === TaskStatus.Waiting;
   }
 
-  saveFilename(filename: string) {
-    this.cachedFilename = filename;
+  getFilename(): string {
+    if (this.bittorrent && this.bittorrent.info) {
+      return this.bittorrent.info.name;
+    }
+    if (this.files[0].path !== "") {
+      return basename(this.files[0].path);
+    }
+    return basename(this.files[0].uris[0].uri);
   }
 }
 

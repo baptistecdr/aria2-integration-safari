@@ -3,12 +3,12 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
 import React, { useEffect, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
-import ExtensionOptionsTab from "./components/extension-options-tab";
-import ServerOptionsTab from "./components/server-options-tab";
-import ExtensionOptions from "../models/extension-options";
-import Server from "../models/server";
-import i18n from "../i18n";
-import Theme from "../models/theme";
+import ExtensionOptions from "@/models/extension-options";
+import { applyTheme } from "@/models/theme";
+import Server from "@/models/server";
+import ServerOptionsTab from "@/options/components/server-options-tab";
+import ExtensionOptionsTab from "@/options/components/extension-options-tab";
+import i18n from "@/i18n";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
@@ -28,13 +28,7 @@ function Options() {
   }, []);
 
   useEffect(() => {
-    if (extensionOptions.theme === Theme.Auto && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.setAttribute("data-bs-theme", Theme.Dark);
-    } else if (extensionOptions.theme === Theme.Auto && window.matchMedia("(prefers-color-scheme: light)").matches) {
-      document.documentElement.setAttribute("data-bs-theme", Theme.Light);
-    } else {
-      document.documentElement.setAttribute("data-bs-theme", extensionOptions.theme);
-    }
+    applyTheme(extensionOptions.theme);
   }, [extensionOptions.theme]);
 
   async function addServer() {

@@ -25,14 +25,7 @@ module.exports = {
     ecmaVersion: 2022,
     sourceType: "module"
   },
-  plugins: [
-    "import"
-  ],
-  "settings": {
-    "import/resolver": {
-      "typescript": {}
-    }
-  },
+  plugins: [],
   rules: {
     "jsx-a11y/label-has-associated-control": [
       "error",
@@ -42,7 +35,18 @@ module.exports = {
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "": "never",
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   },
   ignorePatterns: ["dist", "public", "scripts", "vite.config.ts"]
 };

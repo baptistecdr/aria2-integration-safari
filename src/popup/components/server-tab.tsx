@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import "./server-tab.css";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// @ts-expect-error No type information for aria2
 import Aria2 from "aria2";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { plainToInstance } from "class-transformer";
 import { filesize, FileSizeOptionsBase } from "filesize";
 import { Oval } from "react-loader-spinner";
-import { Task } from "../models/task";
-import GlobalStat from "../models/global-stat";
-import ServerTask from "./server-task";
-import Server from "../../models/server";
-import i18n from "../../i18n";
-import ServerAddTasks from "./server-add-tasks";
+import Server from "@/models/server";
+import { Task } from "@/popup/models/task";
+import GlobalStat from "@/popup/models/global-stat";
+import i18n from "@/i18n";
+import ServerAddTasks from "@/popup/components/server-add-tasks";
+import ServerTask from "@/popup/components/server-task";
 
 interface Props {
   server: Server;
@@ -131,7 +130,7 @@ function ServerTab({ server }: Props) {
           </Col>
         </Row>
       )}
-      {!showAddTask && tasks.map((task) => <ServerTask key={task.gid} task={task} aria2={aria2} server={server} />)}
+      {!showAddTask && tasks.map((task) => <ServerTask key={task.gid} server={server} aria2={aria2} task={task} />)}
     </Container>
   );
 }
