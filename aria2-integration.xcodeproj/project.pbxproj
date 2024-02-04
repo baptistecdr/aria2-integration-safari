@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D255905C2B7006C800EEB118 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D255905B2B7006C800EEB118 /* Icon.png */; };
+		D255905D2B7006C800EEB118 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D255905B2B7006C800EEB118 /* Icon.png */; };
 		D267EA7A2B49BE5A00677AD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D267EA792B49BE5A00677AD6 /* AppDelegate.swift */; };
 		D267EA7C2B49BE5A00677AD6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D267EA7B2B49BE5A00677AD6 /* SceneDelegate.swift */; };
 		D267EA7F2B49BE5A00677AD6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D267EA7D2B49BE5A00677AD6 /* LaunchScreen.storyboard */; };
@@ -17,8 +19,6 @@
 		D267EA9F2B49BE5A00677AD6 /* aria2-integration Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D267EA9E2B49BE5A00677AD6 /* aria2-integration Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D267EAA52B49BE5A00677AD6 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = D267EA602B49BE5A00677AD6 /* Main.html */; };
 		D267EAA62B49BE5A00677AD6 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = D267EA602B49BE5A00677AD6 /* Main.html */; };
-		D267EAA72B49BE5A00677AD6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D267EA622B49BE5A00677AD6 /* Icon.png */; };
-		D267EAA82B49BE5A00677AD6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D267EA622B49BE5A00677AD6 /* Icon.png */; };
 		D267EAA92B49BE5A00677AD6 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = D267EA632B49BE5A00677AD6 /* Style.css */; };
 		D267EAAA2B49BE5A00677AD6 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = D267EA632B49BE5A00677AD6 /* Style.css */; };
 		D267EAAB2B49BE5A00677AD6 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = D267EA642B49BE5A00677AD6 /* Script.js */; };
@@ -88,8 +88,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D255905B2B7006C800EEB118 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		D267EA612B49BE5A00677AD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
-		D267EA622B49BE5A00677AD6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		D267EA632B49BE5A00677AD6 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
 		D267EA642B49BE5A00677AD6 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
 		D267EA652B49BE5A00677AD6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -177,8 +177,8 @@
 		D267EA5F2B49BE5A00677AD6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D255905B2B7006C800EEB118 /* Icon.png */,
 				D267EA602B49BE5A00677AD6 /* Main.html */,
-				D267EA622B49BE5A00677AD6 /* Icon.png */,
 				D267EA632B49BE5A00677AD6 /* Style.css */,
 				D267EA642B49BE5A00677AD6 /* Script.js */,
 			);
@@ -385,12 +385,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D267EAA72B49BE5A00677AD6 /* Icon.png in Resources */,
 				D267EA7F2B49BE5A00677AD6 /* LaunchScreen.storyboard in Resources */,
 				D267EAA52B49BE5A00677AD6 /* Main.html in Resources */,
 				D267EAAB2B49BE5A00677AD6 /* Script.js in Resources */,
 				D267EAAF2B49BE5A00677AD6 /* Assets.xcassets in Resources */,
 				D267EA822B49BE5A00677AD6 /* Main.storyboard in Resources */,
+				D255905C2B7006C800EEB118 /* Icon.png in Resources */,
 				D267EAA92B49BE5A00677AD6 /* Style.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,7 +399,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D267EAA82B49BE5A00677AD6 /* Icon.png in Resources */,
+				D255905D2B7006C800EEB118 /* Icon.png in Resources */,
 				D267EAAA2B49BE5A00677AD6 /* Style.css in Resources */,
 				D267EA8E2B49BE5A00677AD6 /* Main.storyboard in Resources */,
 				D267EAAC2B49BE5A00677AD6 /* Script.js in Resources */,
