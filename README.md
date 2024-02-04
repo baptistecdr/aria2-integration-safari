@@ -31,7 +31,7 @@
 ## Development
 
 - Run `npm run lint:fix` to lint and fix files
-- Run `npm run build:watch` to build and hot-reloads (on Firefox)
+- Run `npm run build:watch` to build and hot-reloads
 - Open `aria2-integration.xcodeproj` with XCode
 - Modify Signing settings
 - Click on Run (macOS or iOS)
@@ -51,7 +51,6 @@ addressed yet, [please open a new issue](https://github.com/baptistecdr/aria2-in
 ## Contributing
 
 * Contributions are welcome!
-    * They are rewarded by a redeem code.
 
 ## Thanks to
 
