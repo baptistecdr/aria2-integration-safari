@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import "./server-tab.css";
@@ -50,7 +50,7 @@ function ServerTab({ server }: Props) {
     aria2.call("aria2.purgeDownloadResult");
   }
 
-  async function updateTasks() {
+  const updateTasks = useCallback(async () => {
     try {
       const gs = await getGlobalStat(aria2);
       const ts = await getTasks(aria2, gs.numWaiting, gs.numStopped);
@@ -60,7 +60,7 @@ function ServerTab({ server }: Props) {
       setDefaultMessage(i18n("serverError"));
     }
     setLoading(false);
-  }
+  }, [aria2]);
 
   useEffect(() => {
     updateTasks();
@@ -68,7 +68,7 @@ function ServerTab({ server }: Props) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [aria2]);
+  }, [aria2, updateTasks]);
 
   if (loading) {
     return (

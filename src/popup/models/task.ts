@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Transform, Type } from "class-transformer";
-import { basename } from "path";
+import basename from "@/stdlib";
 import { File } from "./file";
 
 export enum TaskStatus {
