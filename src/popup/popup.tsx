@@ -4,10 +4,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
 import { Container, Tab, Tabs } from "react-bootstrap";
-import i18n from "../i18n.js";
-import ServerTab from "./components/server-tab.js";
-import ExtensionOptions from "../models/extension-options.js";
-import { applyTheme } from "../models/theme.js";
+import i18n from "@/i18n";
+import ServerTab from "./components/server-tab";
+import ExtensionOptions from "@/models/extension-options";
+import { applyTheme } from "@/models/theme";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
