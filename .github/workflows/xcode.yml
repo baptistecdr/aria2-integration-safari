@@ -49,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v4
         name: Setup Node.js
         with:
-          node-version: "20"
+          node-version-file: .nvmrc
           cache: npm
       - name: Install Dependencies
         run: npm install
