@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Alert, Button, Col, Form, InputGroup, Row } from "react-bootstrap";
+import browser from "webextension-polyfill";
 import ExtensionOptions from "@/models/extension-options";
 import Server from "@/models/server";
 import AlertProps from "@/options/models/alert-props";
-import i18n from "@/i18n";
+
+const i18n = browser.i18n.getMessage;
 
 interface Props {
   extensionOptions: ExtensionOptions;

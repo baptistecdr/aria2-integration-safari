@@ -8,12 +8,14 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import { plainToInstance } from "class-transformer";
 import { filesize, FileSizeOptionsBase } from "filesize";
 import { Oval } from "react-loader-spinner";
+import browser from "webextension-polyfill";
 import Server from "@/models/server";
 import { Task } from "@/popup/models/task";
 import GlobalStat from "@/popup/models/global-stat";
-import i18n from "@/i18n";
 import ServerAddTasks from "@/popup/components/server-add-tasks";
 import ServerTask from "@/popup/components/server-task";
+
+const i18n = browser.i18n.getMessage;
 
 interface Props {
   server: Server;

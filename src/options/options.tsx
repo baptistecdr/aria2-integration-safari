@@ -3,12 +3,14 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
 import React, { useEffect, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
+import browser from "webextension-polyfill";
 import ExtensionOptions from "@/models/extension-options";
 import { applyTheme } from "@/models/theme";
 import Server from "@/models/server";
 import ServerOptionsTab from "@/options/components/server-options-tab";
 import ExtensionOptionsTab from "@/options/components/extension-options-tab";
-import i18n from "@/i18n";
+
+const i18n = browser.i18n.getMessage;
 
 const container = document.getElementById("root");
 const root = createRoot(container!);

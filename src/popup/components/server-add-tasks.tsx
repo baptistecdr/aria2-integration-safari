@@ -1,8 +1,10 @@
 import { FormEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import i18n from "@/i18n";
+import browser from "webextension-polyfill";
 import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
 import Server from "@/models/server";
+
+const i18n = browser.i18n.getMessage;
 
 interface Props {
   aria2: any;

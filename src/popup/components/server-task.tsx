@@ -3,7 +3,6 @@ import { Duration } from "luxon";
 import browser from "webextension-polyfill";
 import { filesize, FileSizeOptionsBase } from "filesize";
 import { Task } from "@/popup/models/task";
-import i18n from "@/i18n";
 import Server from "@/models/server";
 import ServerTaskManagement from "./server-task-management";
 
@@ -35,7 +34,7 @@ function ServerTask({ task, server, aria2 }: Props) {
 
   function getStatus() {
     const firstUppercaseStatus = toFirstUppercase(task.status);
-    return i18n(`taskStatus${firstUppercaseStatus}`);
+    return browser.i18n.getMessage(`taskStatus${firstUppercaseStatus}`);
   }
 
   function formatETA(seconds: number): string {
@@ -83,8 +82,8 @@ function ServerTask({ task, server, aria2 }: Props) {
           {task.isActive() && (
             <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
               <>
-                {task.connections} {i18n("taskConnections")}, <i className="bi-arrow-down" /> {filesize(task.downloadSpeed, filesizeParameters)}/s -{" "}
-                <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, filesizeParameters)}/s
+                {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" />{" "}
+                {filesize(task.downloadSpeed, filesizeParameters)}/s - <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, filesizeParameters)}/s
               </>
             </Col>
           )}
