@@ -89,6 +89,8 @@
 
 /* Begin PBXFileReference section */
 		D255905B2B7006C800EEB118 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		D25F296E2C159FB0000C1FC6 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		D25F296F2C159FDB000C1FC6 /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		D267EA612B49BE5A00677AD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
 		D267EA632B49BE5A00677AD6 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
 		D267EA642B49BE5A00677AD6 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
@@ -151,9 +153,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D25F296D2C159F7A000C1FC6 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				D25F296E2C159FB0000C1FC6 /* ci_post_clone.sh */,
+				D25F296F2C159FDB000C1FC6 /* ci_pre_xcodebuild.sh */,
+			);
+			path = ci_scripts;
+			sourceTree = "<group>";
+		};
 		D267EA592B49BE5900677AD6 = {
 			isa = PBXGroup;
 			children = (
+				D25F296D2C159F7A000C1FC6 /* ci_scripts */,
 				D267EA5E2B49BE5A00677AD6 /* Shared (App) */,
 				D267EA672B49BE5A00677AD6 /* Shared (Extension) */,
 				D267EA782B49BE5A00677AD6 /* iOS (App) */,
@@ -646,7 +658,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
@@ -658,7 +670,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -679,7 +691,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
@@ -691,7 +703,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -715,7 +727,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
@@ -731,7 +743,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -756,7 +768,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
@@ -772,7 +784,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -796,7 +808,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -810,7 +822,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -831,7 +843,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -845,7 +857,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -868,7 +880,7 @@
 				CODE_SIGN_ENTITLEMENTS = "macOS (App)/aria2-integration.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -882,7 +894,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -906,7 +918,7 @@
 				CODE_SIGN_ENTITLEMENTS = "macOS (App)/aria2-integration.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "1.1.2-beta.0";
+				CURRENT_PROJECT_VERSION = "37489ca";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5G6LMK53EG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -920,7 +932,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "1.1.2-beta.0";
+				MARKETING_VERSION = "1.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,

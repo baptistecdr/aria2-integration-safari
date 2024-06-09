@@ -20,30 +20,34 @@ jobs:
         id: major_version
         run: |
           MAJOR_VERSION=$(npm version --no-git-tag-version --no-commit-hooks major)
-          node scripts/update-version.js $MAJOR_VERSION
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          node scripts/update-version.js $MAJOR_VERSION $SHORT_SHA
           npm install
           echo "MAJOR_VERSION=$MAJOR_VERSION" >> $GITHUB_OUTPUT
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit, push and create tag
         uses: EndBug/add-and-commit@v9
         with:
           fetch: true
           default_author: github_actions
-          message: Release ${{ steps.major_version.outputs.MAJOR_VERSION }}
+          message: Release ${{ steps.major_version.outputs.MAJOR_VERSION }} (${{ steps.major_version.outputs.SHORT_SHA }})
           pathspec_error_handling: exitImmediately
           push: true
           tag: ${{ steps.major_version.outputs.MAJOR_VERSION }}
       - name: Set next dev version
         id: dev_version
         run: |
-          DEV_VERSION=$(npm version --no-git-tag-version --no-commit-hooks --preid beta prerelease)
-          node scripts/update-version.js $DEV_VERSION
+          DEV_VERSION=$(npm version --no-git-tag-version --no-commit-hooks patch)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          node scripts/update-version.js $DEV_VERSION $SHORT_SHA
           npm install
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_OUTPUT
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit and push
         uses: EndBug/add-and-commit@v9
         with:
           fetch: true
           default_author: github_actions
-          message: Set next dev version to ${{ steps.dev_version.outputs.DEV_VERSION }}
+          message: Set next dev version to ${{ steps.dev_version.outputs.DEV_VERSION }} (${{ steps.dev_version.outputs.SHORT_SHA }})
           pathspec_error_handling: exitImmediately
           push: true
