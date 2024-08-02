@@ -1,14 +1,14 @@
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
+import ExtensionOptions from "@/models/extension-options";
+import Server from "@/models/server";
+import { applyTheme } from "@/models/theme";
+import ExtensionOptionsTab from "@/options/components/extension-options-tab";
+import ServerOptionsTab from "@/options/components/server-options-tab";
 import React, { useEffect, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import browser from "webextension-polyfill";
-import ExtensionOptions from "@/models/extension-options";
-import { applyTheme } from "@/models/theme";
-import Server from "@/models/server";
-import ServerOptionsTab from "@/options/components/server-options-tab";
-import ExtensionOptionsTab from "@/options/components/extension-options-tab";
 
 const i18n = browser.i18n.getMessage;
 

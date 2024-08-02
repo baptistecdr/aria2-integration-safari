@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
+import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
+import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import tsconfigPaths from 'vite-tsconfig-paths'
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
 
@@ -20,9 +20,9 @@ export default defineConfig({
       },
       output: {
         dir: r("Shared (Extension)", "Resources"),
-        entryFileNames: `js/[name].js`,
-        chunkFileNames: `js/[name].js`,
-        assetFileNames: `media/[name].[ext]`,
+        entryFileNames: "js/[name].js",
+        chunkFileNames: "js/[name].js",
+        assetFileNames: "media/[name].[ext]",
       },
     },
   },

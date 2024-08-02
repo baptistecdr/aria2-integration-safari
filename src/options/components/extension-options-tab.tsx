@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import ExtensionOptions from "@/models/extension-options";
+import Theme from "@/models/theme";
+import AlertProps from "@/options/models/alert-props";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import browser from "webextension-polyfill";
-import ExtensionOptions from "@/models/extension-options";
-import AlertProps from "@/options/models/alert-props";
-import Theme from "@/models/theme";
 
 const i18n = browser.i18n.getMessage;
 
@@ -13,9 +13,9 @@ interface Props {
 }
 
 function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
-  function deserializeExcludedOption(excludedOption: string[]) {
+  const deserializeExcludedOption = useCallback((excludedOption: string[]) => {
     return excludedOption.join(", ");
-  }
+  }, []);
 
   const [captureDownloads, setCaptureDownloads] = useState(extensionOptions.captureDownloads);
   const [captureServer, setCaptureServer] = useState(extensionOptions.captureServer);
@@ -49,6 +49,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
     extensionOptions.excludedSites,
     extensionOptions.theme,
     extensionOptions.useCompleteFilePath,
+    deserializeExcludedOption,
   ]);
 
   const onClickSaveExtensionOptions = async () => {

@@ -1,8 +1,8 @@
-import { FormEvent, useState } from "react";
+import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
+import type Server from "@/models/server";
+import { type FormEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import browser from "webextension-polyfill";
-import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
-import Server from "@/models/server";
 
 const i18n = browser.i18n.getMessage;
 
@@ -19,9 +19,9 @@ function ServerAddTasks({ aria2, server }: Props) {
 
   const formAddUrlsOnSubmit = (formEvent: FormEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
-    formUrls.forEach(async (url) => {
+    for (const url of formUrls) {
       captureURL(aria2, server, url, "", "");
-    });
+    }
     formEvent.currentTarget.reset();
     setFormUrls([]);
   };

@@ -4,9 +4,9 @@
   "type": "module",
   "version": "1.1.2",
   "scripts": {
-    "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{js,ts,jsx,tsx}' --fix",
-    "build": "CI= tsc && vite build --emptyOutDir",
+    "lint": "biome check",
+    "lint:fix": "biome check --fix --unsafe",
+    "build": "tsc && vite build --emptyOutDir",
     "build:watch": "nodemon --watch . --exec npm run build"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "webextension-polyfill": "0.10.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@types/bootstrap": "5.2.10",
     "@types/jest": "29.5.12",
     "@types/luxon": "3.4.2",
@@ -38,21 +39,8 @@
     "@types/react-dom": "18.3.0",
     "@types/uuid": "10.0.0",
     "@types/webextension-polyfill": "0.10.7",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
     "@vitejs/plugin-react": "4.3.1",
-    "eslint": "8.57.0",
-    "eslint-config-airbnb": "19.0.4",
-    "eslint-config-airbnb-typescript": "17.1.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-import-resolver-typescript": "3.6.1",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-jsx-a11y": "6.9.0",
-    "eslint-plugin-prettier": "5.2.1",
-    "eslint-plugin-react": "7.35.0",
-    "eslint-plugin-react-hooks": "4.6.2",
     "nodemon": "3.1.4",
-    "prettier": "3.3.3",
     "typescript": "5.5.4",
     "vite": "5.3.5",
     "vite-plugin-node-polyfills": "0.22.0",

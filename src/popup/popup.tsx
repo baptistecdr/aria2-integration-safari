@@ -1,13 +1,13 @@
-import { createRoot } from "react-dom/client";
 import React, { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
+import ExtensionOptions from "@/models/extension-options";
+import { applyTheme } from "@/models/theme";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import browser from "webextension-polyfill";
 import ServerTab from "./components/server-tab";
-import ExtensionOptions from "@/models/extension-options";
-import { applyTheme } from "@/models/theme";
 
 const i18n = browser.i18n.getMessage;
 

@@ -1,5 +1,5 @@
-import reBasenameWindows from "@stdlib/regexp-basename-windows";
 import reBasenamePosix from "@stdlib/regexp-basename-posix";
+import reBasenameWindows from "@stdlib/regexp-basename-windows";
 
 function isWindowsPath(filepath: string): boolean {
   const windowsPathRegex = /^[a-zA-Z]:\\/;
