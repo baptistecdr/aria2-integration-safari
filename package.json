@@ -12,7 +12,7 @@
   "dependencies": {
     "@stdlib/regexp-basename-posix": "0.2.2",
     "@stdlib/regexp-basename-windows": "0.2.3",
-    "@testing-library/react": "16.0.0",
+    "@testing-library/react": "16.0.1",
     "@testing-library/user-event": "14.5.2",
     "aria2": "4.1.2",
     "bootstrap": "5.3.3",
