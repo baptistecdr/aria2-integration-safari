@@ -101,6 +101,7 @@ function ServerTask({ task, server, aria2 }: Props) {
             aria-valuenow={getDownloadPer(1000)}
             aria-valuemin={0}
             aria-valuemax={1000}
+            tabIndex={0}
           />
           <small
             className="justify-content-center d-flex position-absolute w-100"
