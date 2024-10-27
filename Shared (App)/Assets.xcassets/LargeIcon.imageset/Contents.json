@@ -1,19 +1,28 @@
 {
   "images" : [
     {
-      "filename" : "1024.png",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "large-icon-universal-any-256.png",
+      "idiom" : "universal"
     },
     {
-      "filename" : "2048.png",
-      "idiom" : "universal",
-      "scale" : "2x"
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "large-icon-universal-light-256.png",
+      "idiom" : "universal"
     },
     {
-      "filename" : "3072.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "large-icon-universal-dark-256.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {
