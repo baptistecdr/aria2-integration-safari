@@ -19,7 +19,7 @@ jobs:
       - name: Set minor version
         id: minor_version
         run: |
-          MINOR_VERSION=$(npm version --no-git-tag-version --no-commit-hooks minor)
+          MINOR_VERSION=$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $MINOR_VERSION $SHORT_SHA
           npm install
