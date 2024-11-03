@@ -23,6 +23,7 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $PATCH_VERSION $SHORT_SHA
           npm install
+          npm run lint:fix
           echo "PATCH_VERSION=$PATCH_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit, push and create tag
@@ -30,7 +31,7 @@ jobs:
         with:
           fetch: true
           default_author: github_actions
-          message: Release ${{ steps.patch_version.outputs.PATCH_VERSION }} (${{ steps.patch_version.outputs.SHORT_SHAnpm }})
+          message: Release ${{ steps.patch_version.outputs.PATCH_VERSION }} (${{ steps.patch_version.outputs.SHORT_SHA }})
           pathspec_error_handling: exitImmediately
           push: true
           tag: ${{ steps.patch_version.outputs.PATCH_VERSION }}
@@ -41,6 +42,7 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $DEV_VERSION $SHORT_SHA
           npm install
+          npm run lint:fix
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit and push

@@ -23,6 +23,7 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $MAJOR_VERSION $SHORT_SHA
           npm install
+          npm run lint:fix
           echo "MAJOR_VERSION=$MAJOR_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit, push and create tag
@@ -41,6 +42,7 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $DEV_VERSION $SHORT_SHA
           npm install
+          npm run lint:fix
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
       - name: Commit and push
