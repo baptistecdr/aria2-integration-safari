@@ -13,7 +13,7 @@ if (version.startsWith("v")) {
 
 const shortSha = process.argv[3];
 
-const filesToUpdate = ["package.json", "public/manifest.json", "package-lock.json", "aria2-integration.xcodeproj/project.pbxproj"];
+const filesToUpdate = ["public/manifest.json", "aria2-integration.xcodeproj/project.pbxproj"];
 
 for (const file of filesToUpdate) {
   fs.readFile(file, "utf8", (err, data) => {

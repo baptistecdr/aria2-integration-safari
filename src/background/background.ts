@@ -1,7 +1,7 @@
 import { captureURL } from "@/models/aria2-extension";
 import ExtensionOptions from "@/models/extension-options";
 // @ts-expect-error No type information for aria2
-import Aria2 from "aria2";
+import Aria2 from "@baptistecdr/aria2";
 import type { Cookies, Menus } from "webextension-polyfill";
 import browser from "webextension-polyfill";
 
