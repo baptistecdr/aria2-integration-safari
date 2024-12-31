@@ -7,14 +7,15 @@
     "lint": "biome check",
     "lint:fix": "biome check --fix --unsafe",
     "build": "tsc && vite build --emptyOutDir",
-    "build:watch": "nodemon --watch . --exec npm run build"
+    "build:debug": "tsc && NODE_ENV=development vite build --mode development --emptyOutDir",
+    "build:watch": "nodemon --watch . --exec npm run build:debug"
   },
   "dependencies": {
+    "@baptistecdr/aria2": "5.0.1",
     "@stdlib/regexp-basename-posix": "0.2.2",
     "@stdlib/regexp-basename-windows": "0.2.3",
     "@testing-library/react": "16.1.0",
     "@testing-library/user-event": "14.5.2",
-    "@baptistecdr/aria2": "4.1.4",
     "bootstrap": "5.3.3",
     "bootstrap-icons": "1.11.3",
     "class-transformer": "0.5.1",
