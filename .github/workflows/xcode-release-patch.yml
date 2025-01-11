@@ -19,7 +19,7 @@ jobs:
       - name: Set patch version
         id: patch_version
         run: |
-          PATCH_VERSION=$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
+          PATCH_VERSION=v$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
           SHORT_SHA=$(git rev-parse --short HEAD)
           node scripts/update-version.js $PATCH_VERSION $SHORT_SHA
           npm install
