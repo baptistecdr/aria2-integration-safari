@@ -45,10 +45,5 @@
     "vite": "6.0.7",
     "vite-plugin-node-polyfills": "0.23.0",
     "vite-tsconfig-paths": "5.1.4"
-  },
-  "overrides": {
-    "vite-plugin-node-polyfills": {
-      "vite": "6.0.7"
-    }
   }
 }
