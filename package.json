@@ -42,7 +42,7 @@
     "nodemon": "3.1.10",
     "typescript": "5.8.3",
     "vite": "6.3.5",
-    "vite-plugin-node-polyfills": "0.23.0",
+    "vite-plugin-node-polyfills": "0.24.0",
     "vite-tsconfig-paths": "5.1.4"
   }
 }
