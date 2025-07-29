@@ -1,9 +1,9 @@
-import type Server from "@/models/server";
-import type { Task } from "@/popup/models/task";
 import { type FileSizeOptionsBase, filesize } from "filesize";
 import { Duration } from "luxon";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import browser from "webextension-polyfill";
+import type Server from "@/models/server";
+import type { Task } from "@/popup/models/task";
 import ServerTaskManagement from "./server-task-management";
 
 interface Props {
@@ -74,17 +74,13 @@ function ServerTask({ task, server, aria2 }: Props) {
             </OverlayTrigger>
           </Col>
           <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
-            <>
-              {getStatus()}, {filesize(task.completedLength, filesizeParameters)} / {filesize(task.totalLength, filesizeParameters)}
-              {task.isActive() && `, ${getETA()}`}
-            </>
+            {getStatus()}, {filesize(task.completedLength, filesizeParameters)} / {filesize(task.totalLength, filesizeParameters)}
+            {task.isActive() && `, ${getETA()}`}
           </Col>
           {task.isActive() && (
             <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
-              <>
-                {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" />{" "}
-                {filesize(task.downloadSpeed, filesizeParameters)}/s - <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, filesizeParameters)}/s
-              </>
+              {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" />{" "}
+              {filesize(task.downloadSpeed, filesizeParameters)}/s - <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, filesizeParameters)}/s
             </Col>
           )}
         </Row>
@@ -101,7 +97,6 @@ function ServerTask({ task, server, aria2 }: Props) {
             aria-valuenow={getDownloadPer(1000)}
             aria-valuemin={0}
             aria-valuemax={1000}
-            tabIndex={0}
           />
           <small
             className="justify-content-center d-flex position-absolute w-100"

@@ -2,17 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import "./server-tab.css";
-import type Server from "@/models/server";
-import ServerAddTasks from "@/popup/components/server-add-tasks";
-import ServerTask from "@/popup/components/server-task";
-import GlobalStat from "@/popup/models/global-stat";
-import { Task } from "@/popup/models/task";
 // @ts-expect-error No type information for aria2
 import Aria2 from "@baptistecdr/aria2";
 import { plainToInstance } from "class-transformer";
 import { type FileSizeOptionsBase, filesize } from "filesize";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import browser from "webextension-polyfill";
+import type Server from "@/models/server";
+import ServerAddTasks from "@/popup/components/server-add-tasks";
+import ServerTask from "@/popup/components/server-task";
+import GlobalStat from "@/popup/models/global-stat";
+import { Task } from "@/popup/models/task";
 
 const i18n = browser.i18n.getMessage;
 
@@ -57,7 +57,7 @@ function ServerTab({ server }: Props) {
       const ts = await getTasks(aria2, gs.numWaiting, gs.numStopped);
       setGlobalStat(gs);
       setTasks(ts);
-    } catch (e: any) {
+    } catch (_e: any) {
       setDefaultMessage(i18n("serverError"));
     }
     setLoading(false);
@@ -89,10 +89,8 @@ function ServerTab({ server }: Props) {
     <Container fluid>
       <Row>
         <Col xs={6} sm={6} className="align-self-baseline text-start stats">
-          <>
-            <i className="bi-arrow-down" /> {filesize(globalStat.downloadSpeed, fileSizeBase)}/s - <i className="bi-arrow-up" />{" "}
-            {filesize(globalStat.uploadSpeed, fileSizeBase)}/s
-          </>
+          <i className="bi-arrow-down" /> {filesize(globalStat.downloadSpeed, fileSizeBase)}/s - <i className="bi-arrow-up" />{" "}
+          {filesize(globalStat.uploadSpeed, fileSizeBase)}/s
         </Col>
         <Col xs={6} sm={6} className="align-self-baseline text-end">
           <Button

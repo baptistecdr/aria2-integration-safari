@@ -1,8 +1,8 @@
-import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
-import type Server from "@/models/server";
 import { type FormEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import browser from "webextension-polyfill";
+import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
+import type Server from "@/models/server";
 
 const i18n = browser.i18n.getMessage;
 
