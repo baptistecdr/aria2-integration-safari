@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -9,8 +9,12 @@
     "lineWidth": 160,
     "attributePosition": "auto"
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -25,16 +29,17 @@
     }
   },
   "files": {
-    "ignore": [
-      ".idea/**",
-      "dist/**",
-      "node_modules/**",
-      "iOS (App)/**",
-      "iOS (Extension)/**",
-      "macOS (App)/**",
-      "macOS (Extension)/**",
-      "Shared (App)/**",
-      "Shared (Extension)/**"
+    "includes": [
+      "**",
+      "!**/.idea/**",
+      "!**/dist/**",
+      "!**/node_modules/**",
+      "!**/iOS (App)/**",
+      "!**/iOS (Extension)/**",
+      "!**/macOS (App)/**",
+      "!**/macOS (Extension)/**",
+      "!**/Shared (App)/**",
+      "!**/Shared (Extension)/**"
     ]
   },
   "javascript": {
