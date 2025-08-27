@@ -16,7 +16,7 @@
     "@stdlib/regexp-basename-windows": "0.2.3",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
-    "bootstrap": "5.3.7",
+    "bootstrap": "5.3.8",
     "bootstrap-icons": "1.13.1",
     "class-transformer": "0.5.1",
     "filesize": "10.1.6",
