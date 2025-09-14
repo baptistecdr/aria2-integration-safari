@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -31,15 +31,15 @@
   "files": {
     "includes": [
       "**",
-      "!**/.idea/**",
-      "!**/dist/**",
-      "!**/node_modules/**",
-      "!**/iOS (App)/**",
-      "!**/iOS (Extension)/**",
-      "!**/macOS (App)/**",
-      "!**/macOS (Extension)/**",
-      "!**/Shared (App)/**",
-      "!**/Shared (Extension)/**"
+      "!**/.idea",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/iOS (App)",
+      "!**/iOS (Extension)",
+      "!**/macOS (App)",
+      "!**/macOS (Extension)",
+      "!**/Shared (App)",
+      "!**/Shared (Extension)"
     ]
   },
   "javascript": {
