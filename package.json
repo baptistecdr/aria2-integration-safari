@@ -11,7 +11,7 @@
     "build:watch": "nodemon --watch . --exec npm run build:debug"
   },
   "dependencies": {
-    "@baptistecdr/aria2": "5.0.2",
+    "@baptistecdr/aria2": "5.0.3",
     "@stdlib/regexp-basename-posix": "0.2.2",
     "@stdlib/regexp-basename-windows": "0.2.3",
     "@testing-library/react": "16.3.0",
