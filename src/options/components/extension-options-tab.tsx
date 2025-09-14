@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import browser from "webextension-polyfill";
 import ExtensionOptions from "@/models/extension-options";
@@ -90,7 +90,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
               label={i18n("extensionOptionsThemeLight")}
               name="group-theme"
               type="radio"
-              id="theme-light"
+              id={useId()}
               value={Theme.Light}
               checked={theme === Theme.Light}
               onChange={(e) => setTheme(e.target.value as Theme)}
@@ -100,7 +100,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
               label={i18n("extensionOptionsThemeDark")}
               name="group-theme"
               type="radio"
-              id="theme-dark"
+              id={useId()}
               value={Theme.Dark}
               checked={theme === Theme.Dark}
               onChange={(e) => setTheme(e.target.value as Theme)}
@@ -110,7 +110,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
               label={i18n("extensionOptionsThemeAuto")}
               name="group-theme"
               type="radio"
-              id="theme-auto"
+              id={useId()}
               value={Theme.Auto}
               checked={theme === Theme.Auto}
               onChange={(e) => setTheme(e.target.value as Theme)}

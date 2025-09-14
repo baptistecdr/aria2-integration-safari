@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import browser from "webextension-polyfill";
 import ExtensionOptions from "@/models/extension-options";
@@ -62,7 +62,7 @@ function Options() {
 
   return (
     <Tabs
-      id="tabs-servers-options"
+      id={useId()}
       defaultActiveKey={defaultActiveTab}
       activeKey={activeTab}
       onSelect={async (selectedTab) => {

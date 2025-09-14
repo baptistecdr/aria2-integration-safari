@@ -1,5 +1,6 @@
 import { type FileSizeOptionsBase, filesize } from "filesize";
 import { Duration } from "luxon";
+import { useId } from "react";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import browser from "webextension-polyfill";
 import type Server from "@/models/server";
@@ -65,7 +66,7 @@ function ServerTask({ task, server, aria2 }: Props) {
               key="bottom"
               placement="top"
               overlay={
-                <Tooltip id="tooltip-bottom">
+                <Tooltip id={useId()}>
                   <small>{task.getFilename()}</small>
                 </Tooltip>
               }

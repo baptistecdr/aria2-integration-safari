@@ -112,9 +112,7 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
               <i className={showPassword ? "bi-eye-slash" : "bi-eye"} />
             </Button>
           </InputGroup>
-          <Form.Text id="form-server-secret-description" muted>
-            {i18n("serverOptionsSecretDescription")}
-          </Form.Text>
+          <Form.Text muted>{i18n("serverOptionsSecretDescription")}</Form.Text>
         </Form.Group>
       </Row>
 
@@ -122,7 +120,7 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
         <Form.Group as={Col} controlId="form-rpc-parameters">
           <Form.Label>{i18n("serverOptionsRpcParameters")}</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder="split: 5" value={serverRpcParameters} onChange={(e) => setServerRpcParameters(e.target.value)} />
-          <Form.Text id="form-rpc-parameters-description">{i18n("serverOptionsRpcParametersDescription")}</Form.Text>
+          <Form.Text>{i18n("serverOptionsRpcParametersDescription")}</Form.Text>
         </Form.Group>
       </Row>
 
