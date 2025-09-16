@@ -5,7 +5,7 @@
   "homepage_url": "https://github.com/baptistecdr/aria2-extensions",
   "description": "__MSG_extDescription__",
   "version": "1.1.5",
-  "version_name": "1.1.5 (c288738)",
+  "version_name": "1.1.5 (e03eab1)",
   "default_locale": "en",
   "permissions": ["contextMenus", "cookies", "storage", "activeTab"],
   "host_permissions": ["*://*/*"],
