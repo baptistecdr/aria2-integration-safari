@@ -40,7 +40,7 @@
     "@types/webextension-polyfill": "0.10.7",
     "@vitejs/plugin-react": "5.0.4",
     "nodemon": "3.1.10",
-    "typescript": "5.9.2",
+    "typescript": "5.9.3",
     "vite": "7.1.7",
     "vite-plugin-node-polyfills": "0.24.0",
     "vite-tsconfig-paths": "5.1.4"
