@@ -16,34 +16,22 @@ const shortSha = process.argv[3];
 const filesToUpdate = ["public/manifest.json", "aria2-integration.xcodeproj/project.pbxproj"];
 
 for (const file of filesToUpdate) {
-  fs.readFile(file, "utf8", (err, data) => {
-    if (err) {
-      console.error(`Unable to read the content of the file '${file}'. (${err})`);
-      return;
-    }
-
+  try {
+    const originalContent = fs.readFileSync(file, "utf8");
     if (file.indexOf(".json") === -1) {
       const marketingVersionFieldRegEx = /MARKETING_VERSION\s*=\s*"?[\w.-]+"?;/g;
       const currentVersionFieldRegEx = /CURRENT_PROJECT_VERSION\s*=\s*"?[\w.-]+"?;/g;
-      let newContent = data.replaceAll(marketingVersionFieldRegEx, `MARKETING_VERSION = "${version}";`);
+      let newContent = originalContent.replaceAll(marketingVersionFieldRegEx, `MARKETING_VERSION = "${version}";`);
       newContent = newContent.replaceAll(currentVersionFieldRegEx, `CURRENT_PROJECT_VERSION = "${shortSha}";`);
-      fs.writeFile(file, newContent, (err1) => {
-        if (err1) {
-          console.error(`Unable to write the new content of the file '${file}'. (${err1})`);
-        }
-      });
+      fs.writeFileSync(file, newContent);
     } else {
-      const content = JSON.parse(data);
-      content.version = version;
-      if (file === "public/manifest.json") {
-        content.version_name = `${version} (${shortSha})`;
-      }
-      const newContent = `${JSON.stringify(content, null, 2)}\n`;
-      fs.writeFile(file, newContent, (err1) => {
-        if (err1) {
-          console.error(`Unable to write the new content of the file '${file}'. (${err1})`);
-        }
-      });
+      const jsonContent = JSON.parse(originalContent);
+      jsonContent.version = version;
+      jsonContent.version_name = `${version} (${shortSha})`;
+      const newContent = `${JSON.stringify(jsonContent, null, 2)}\n`;
+      fs.writeFileSync(file, newContent);
     }
-  });
+  } catch (error) {
+    console.error(`Unable to read/write the content of the file ${file}:`, error);
+  }
 }
