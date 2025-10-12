@@ -23,7 +23,7 @@
 - Clone the project
 - Run `npm install`
 - Run `npm run build` to build Safari extension
-- Open `aria2-integration.xcodeproj` with XCode
+- Open `aria2-integration.xcodeproj` with Xcode
 - Modify Signing settings
 - Click on Run (macOS or iOS)
 
@@ -32,7 +32,7 @@
 
 - Run `npm run lint:fix` to lint and fix files
 - Run `npm run build:watch` to build and hot-reloads
-- Open `aria2-integration.xcodeproj` with XCode
+- Open `aria2-integration.xcodeproj` with Xcode
 - Modify Signing settings
 - Click on Run (macOS or iOS)
 
