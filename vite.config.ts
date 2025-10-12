@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -32,4 +33,18 @@ export default defineConfig({
     },
   },
   plugins: [react(), nodePolyfills(), tsconfigPaths()],
+  test: {
+    root: r("."),
+    environment: "jsdom",
+    globals: true,
+    setupFiles: [r("test", "setupTests.ts")],
+    coverage: {
+      reporter: ["text", "json", "json-summary", "html"],
+      reportsDirectory: r("coverage"),
+      include: ["public/**", "scripts/**", "src/**"],
+    },
+    chaiConfig: {
+      truncateThreshold: 0,
+    },
+  },
 });

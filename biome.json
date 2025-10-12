@@ -39,7 +39,8 @@
       "!**/macOS (App)",
       "!**/macOS (Extension)",
       "!**/Shared (App)",
-      "!**/Shared (Extension)"
+      "!**/Shared (Extension)",
+      "!**/coverage"
     ]
   },
   "javascript": {
