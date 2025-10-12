@@ -8,7 +8,7 @@
     "lint:fix": "biome check --fix --unsafe",
     "build": "tsc && vite build --emptyOutDir",
     "build:debug": "tsc && NODE_ENV=development vite build --mode development --emptyOutDir",
-    "build:watch": "nodemon --watch . --exec npm run build:debug"
+    "build:debug:watch": "tsc && NODE_ENV=development vite build --mode development --emptyOutDir --watch"
   },
   "dependencies": {
     "@baptistecdr/aria2": "5.0.3",
@@ -38,7 +38,6 @@
     "@types/react-dom": "19.2.1",
     "@types/webextension-polyfill": "0.10.7",
     "@vitejs/plugin-react": "5.0.4",
-    "nodemon": "3.1.10",
     "typescript": "5.9.3",
     "vite": "7.1.9",
     "vite-plugin-node-polyfills": "0.24.0",
