@@ -14,8 +14,6 @@ import ServerTask from "@/popup/components/server-task";
 import GlobalStat from "@/popup/models/global-stat";
 import { Task } from "@/popup/models/task";
 
-const i18n = browser.i18n.getMessage;
-
 interface Props {
   server: Server;
 }
@@ -44,7 +42,7 @@ function ServerTab({ server }: Props) {
   const [globalStat, setGlobalStat] = useState(GlobalStat.default());
   const [tasks, setTasks] = useState([] as Task[]);
   const [showAddTask, setShowAddTask] = useState(false);
-  const [defaultMessage, setDefaultMessage] = useState(i18n("serverNoTasks"));
+  const [defaultMessage, setDefaultMessage] = useState(browser.i18n.getMessage("serverNoTasks"));
   const fileSizeBase = { base: 2 } as FilesizeOptions;
 
   function onClickPurge() {
@@ -58,7 +56,7 @@ function ServerTab({ server }: Props) {
       setGlobalStat(gs);
       setTasks(ts);
     } catch (_e: any) {
-      setDefaultMessage(i18n("serverError"));
+      setDefaultMessage(browser.i18n.getMessage("serverError"));
     }
     setLoading(false);
   }, [aria2]);
@@ -101,11 +99,11 @@ function ServerTab({ server }: Props) {
               setShowAddTask(!showAddTask);
             }}
           >
-            {!showAddTask && i18n("serverAdd")}
-            {showAddTask && i18n("serverCancel")}
+            {!showAddTask && browser.i18n.getMessage("serverAdd")}
+            {showAddTask && browser.i18n.getMessage("serverCancel")}
           </Button>
           <Button variant="danger" size="sm" className="btn-right" onClick={() => onClickPurge()}>
-            {i18n("serverPurge")}
+            {browser.i18n.getMessage("serverPurge")}
           </Button>
         </Col>
         <Col xs={12} sm={12}>

@@ -5,8 +5,6 @@ import ExtensionOptions from "@/models/extension-options";
 import Theme from "@/models/theme";
 import AlertProps from "@/options/models/alert-props";
 
-const i18n = browser.i18n.getMessage;
-
 interface Props {
   extensionOptions: ExtensionOptions;
   setExtensionOptions: React.Dispatch<React.SetStateAction<ExtensionOptions>>;
@@ -65,9 +63,9 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
         theme,
       ).toStorage();
       setExtensionOptions(newExtensionOptions);
-      setAlertProps(AlertProps.success(i18n("serverOptionsSuccess")));
+      setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
     } catch {
-      setAlertProps(AlertProps.error(i18n("serverOptionsError")));
+      setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
     }
   };
 
@@ -83,11 +81,11 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
 
       <Col xs={12} sm={12} className="mb-3">
         <Form.Group controlId="form-theme">
-          <Form.Label>{i18n("extensionOptionsTheme")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("extensionOptionsTheme")}</Form.Label>
           <Form.Group controlId="form-group-theme">
             <Form.Check
               inline
-              label={i18n("extensionOptionsThemeLight")}
+              label={browser.i18n.getMessage("extensionOptionsThemeLight")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -97,7 +95,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
             />
             <Form.Check
               inline
-              label={i18n("extensionOptionsThemeDark")}
+              label={browser.i18n.getMessage("extensionOptionsThemeDark")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -107,7 +105,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
             />
             <Form.Check
               inline
-              label={i18n("extensionOptionsThemeAuto")}
+              label={browser.i18n.getMessage("extensionOptionsThemeAuto")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -121,7 +119,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
 
       <Col xs={12} sm={12} className="mb-3">
         <Button variant="primary" onClick={onClickSaveExtensionOptions} disabled={captureDownloads && captureServer === ""}>
-          {i18n("serverOptionsSave")}
+          {browser.i18n.getMessage("serverOptionsSave")}
         </Button>
       </Col>
     </Form>
