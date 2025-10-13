@@ -48,7 +48,7 @@ export default class ExtensionOptions {
   static async fromStorage(): Promise<ExtensionOptions> {
     const storage = await browser.storage.sync.get(null);
     if (storage.options) {
-      return ExtensionOptions.deserialize(storage.options);
+      return ExtensionOptions.deserialize(storage.options as string);
     }
     return new ExtensionOptions();
   }

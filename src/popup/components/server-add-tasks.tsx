@@ -4,8 +4,6 @@ import browser from "webextension-polyfill";
 import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
 import type Server from "@/models/server";
 
-const i18n = browser.i18n.getMessage;
-
 interface Props {
   aria2: any;
   server: Server;
@@ -42,17 +40,17 @@ function ServerAddTasks({ aria2, server }: Props) {
       <Col xs={12} sm={12} className="mb-3">
         <Form onSubmit={formAddUrlsOnSubmit}>
           <Form.Group controlId="form-add-urls">
-            <Form.Label>{i18n("addTaskAddUrls")}</Form.Label>
+            <Form.Label>{browser.i18n.getMessage("addTaskAddUrls")}</Form.Label>
             <InputGroup>
               <Form.Control
                 as="textarea"
                 rows={5}
-                placeholder={i18n("addTaskAddUrlsPlaceholder")}
+                placeholder={browser.i18n.getMessage("addTaskAddUrlsPlaceholder")}
                 value={formUrls.join("\n")}
                 onChange={(e) => setFormUrls(e.target.value.split("\n"))}
               />
               <Button type="submit" variant="primary" size="sm">
-                {i18n("addTaskAdd")}
+                {browser.i18n.getMessage("addTaskAdd")}
               </Button>
             </InputGroup>
           </Form.Group>
@@ -61,11 +59,11 @@ function ServerAddTasks({ aria2, server }: Props) {
       <Col xs={12} sm={12} className="mb-3">
         <Form onSubmit={formAddFilesOnSubmit}>
           <Form.Group controlId="form-add-files">
-            <Form.Label>{i18n("addTaskAddFiles")}</Form.Label>
+            <Form.Label>{browser.i18n.getMessage("addTaskAddFiles")}</Form.Label>
             <InputGroup>
               <Form.Control type="file" size="sm" onChange={(e) => setFormFiles(e.target as HTMLInputElement)} multiple />
               <Button type="submit" variant="primary" size="sm">
-                {i18n("addTaskAdd")}
+                {browser.i18n.getMessage("addTaskAdd")}
               </Button>
             </InputGroup>
           </Form.Group>

@@ -6,8 +6,6 @@ import type ExtensionOptions from "@/models/extension-options";
 import Server from "@/models/server";
 import AlertProps from "@/options/models/alert-props";
 
-const i18n = browser.i18n.getMessage;
-
 interface Props {
   extensionOptions: ExtensionOptions;
   setExtensionOptions: React.Dispatch<React.SetStateAction<ExtensionOptions>>;
@@ -67,9 +65,9 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
           new Server(server.uuid, serverName, serverSecure, serverHost, serverPort, "/jsonrpc", serverSecret, serializeRpcParameters(serverRpcParameters)),
         );
         setExtensionOptions(newExtensionOptions);
-        setAlertProps(AlertProps.success(i18n("serverOptionsSuccess")));
+        setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
       } catch {
-        setAlertProps(AlertProps.error(i18n("serverOptionsError")));
+        setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
       }
       const validationTimeout = 1500; // ms
       window.setTimeout(() => setValidated(false), validationTimeout);
@@ -90,62 +88,62 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
       )}
       <Row className="mb-3">
         <Form.Group as={Col} controlId="form-server-name">
-          <Form.Label>{i18n("serverOptionsName")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsName")}</Form.Label>
           <Form.Control type="text" value={serverName} required onChange={(e) => setServerName(e.target.value)} />
         </Form.Group>
         <Form.Group as={Col} controlId="form-server-host">
-          <Form.Label>{i18n("serverOptionsHost")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsHost")}</Form.Label>
           <Form.Control type="text" value={serverHost} required onChange={(e) => setServerHost(e.target.value)} />
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Form.Group as={Col} controlId="form-server-port">
-          <Form.Label>{i18n("serverOptionsPort")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsPort")}</Form.Label>
           <Form.Control type="number" min={0} max={49151} value={serverPort} required onChange={(e) => setServerPort(Number.parseInt(e.target.value, 10))} />
         </Form.Group>
 
         <Form.Group as={Col} controlId="form-server-secure">
-          <Form.Label>{i18n("serverOptionsSecureConnection")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsSecureConnection")}</Form.Label>
           <Form.Check checked={serverSecure} onChange={(e) => setServerSecure(e.target.checked)} />
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Form.Group as={Col} controlId="form-server-url">
-          <Form.Label>{i18n("serverOptionsUrl")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsUrl")}</Form.Label>
           <Form.Control type="text" value={serverUrl()?.toString() ?? ""} disabled={true} />
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Form.Group as={Col} controlId="form-server-secret">
-          <Form.Label>{i18n("serverOptionsSecret")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsSecret")}</Form.Label>
           <InputGroup>
             <Form.Control type={showPassword ? "text" : "password"} value={serverSecret} onChange={(e) => setServerSecret(e.target.value)} />
             <Button variant="outline-secondary" onClick={() => setShowPassword(!showPassword)}>
               <i className={showPassword ? "bi-eye-slash" : "bi-eye"} />
             </Button>
           </InputGroup>
-          <Form.Text muted>{i18n("serverOptionsSecretDescription")}</Form.Text>
+          <Form.Text muted>{browser.i18n.getMessage("serverOptionsSecretDescription")}</Form.Text>
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Form.Group as={Col} controlId="form-rpc-parameters">
-          <Form.Label>{i18n("serverOptionsRpcParameters")}</Form.Label>
+          <Form.Label>{browser.i18n.getMessage("serverOptionsRpcParameters")}</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder="split: 5" value={serverRpcParameters} onChange={(e) => setServerRpcParameters(e.target.value)} />
-          <Form.Text>{i18n("serverOptionsRpcParametersDescription")}</Form.Text>
+          <Form.Text>{browser.i18n.getMessage("serverOptionsRpcParametersDescription")}</Form.Text>
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Col xs={12} sm={12}>
           <Button type="submit" variant="primary">
-            {i18n("serverOptionsSave")}
+            {browser.i18n.getMessage("serverOptionsSave")}
           </Button>
           <Button variant="danger" className="ms-2" onClick={() => deleteServer(server)}>
-            {i18n("serverOptionsDelete")}
+            {browser.i18n.getMessage("serverOptionsDelete")}
           </Button>
         </Col>
       </Row>
