@@ -1,53 +1,75 @@
-name: Release Patch
+name: Release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Release type
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
 
 jobs:
-  release-patch:
-    name: Release Patch
+  release:
+    name: Release ${{ inputs.release_type }}
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v6
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-      - name: Set patch version
-        id: patch_version
+
+      - name: Set ${{ inputs.version-type }} version
+        id: release_version
         run: |
-          PATCH_VERSION=v$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
+          RELEASE_TYPE="${{ inputs.release_type }}"
+          RELEASE_VERSION=$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
+          RELEASE_VERSION="v${RELEASE_VERSION}"
           SHORT_SHA=$(git rev-parse --short HEAD)
-          node scripts/update-version.js $PATCH_VERSION $SHORT_SHA
+
+          node scripts/update-version.js "$RELEASE_VERSION" "$SHORT_SHA"
           npm install
           npm run lint:fix
-          echo "PATCH_VERSION=$PATCH_VERSION" >> $GITHUB_OUTPUT
+
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
+
       - name: Commit, push and create tag
         uses: EndBug/add-and-commit@v10
         with:
           fetch: true
           default_author: github_actions
-          message: Release ${{ steps.patch_version.outputs.PATCH_VERSION }} (${{ steps.patch_version.outputs.SHORT_SHA }})
+          message: Release ${{ steps.release_version.outputs.RELEASE_VERSION }} (${{ steps.release_version.outputs.SHORT_SHA }})
           pathspec_error_handling: exitImmediately
           push: true
-          tag: ${{ steps.patch_version.outputs.PATCH_VERSION }}
+          tag: ${{ steps.release_version.outputs.RELEASE_VERSION }}
+
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create ${{ steps.patch_version.outputs.PATCH_VERSION }} --generate-notes
+        run: gh release create ${{ steps.release_version.outputs.RELEASE_VERSION }} --generate-notes
+
       - name: Set next dev version
         id: dev_version
         run: |
           DEV_VERSION=$(npm version --no-git-tag-version --no-commit-hooks patch)
           SHORT_SHA=$(git rev-parse --short HEAD)
-          node scripts/update-version.js $DEV_VERSION $SHORT_SHA
+
+          node scripts/update-version.js "$DEV_VERSION" "$SHORT_SHA"
           npm install
           npm run lint:fix
+
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
+
       - name: Commit and push
         uses: EndBug/add-and-commit@v10
         with:
