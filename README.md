@@ -1,6 +1,6 @@
 <h3 align="center">Aria2 Integration</h3>
 <p align="center">
-    Aria2 Integration allows you to redirect downloads to your Aria2 server.
+     Send downloads, links, and torrent files directly to your Aria2 server.
     <br>
     <a href="https://github.com/baptistecdr/aria2-integration-safari/issues/new">Report bug</a>
     ·
@@ -38,7 +38,7 @@
 
 ### Internationalization
 
-* The extension speaks English, French and Chinese. You can add your language
+* The extension speaks English, French, and Chinese. You can add your language
   in [public/_locales](https://github.com/baptistecdr/aria2-integration-safari/tree/main/public/_locales).
   You can find your language
   code [here](https://src.chromium.org/viewvc/chrome/trunk/src/third_party/cld/languages/internal/languages.cc#l23).
