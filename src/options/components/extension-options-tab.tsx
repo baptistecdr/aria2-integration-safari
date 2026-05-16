@@ -1,22 +1,23 @@
-import { useCallback, useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
-import browser from "webextension-polyfill";
+import { useExtensionOptions } from "@/extension-options-provider";
 import ExtensionOptions from "@/models/extension-options";
 import Theme from "@/models/theme";
 import AlertProps from "@/options/models/alert-props";
 
-interface Props {
-  extensionOptions: ExtensionOptions;
-  setExtensionOptions: React.Dispatch<React.SetStateAction<ExtensionOptions>>;
+function serializeExcludedOption(excludedOptions: string): string[] {
+  return excludedOptions
+    .trim()
+    .split(/\s*,+\s*/)
+    .filter((s) => s !== "");
 }
 
-function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
-  const deserializeExcludedOption = useCallback((excludedOption: string[]) => {
-    return excludedOption.join(", ");
-  }, []);
+function deserializeExcludedOption(excludedOption: string[]): string {
+  return excludedOption.join(", ");
+}
 
-  const [captureDownloads, setCaptureDownloads] = useState(extensionOptions.captureDownloads);
-  const [captureServer, setCaptureServer] = useState(extensionOptions.captureServer);
+function ExtensionOptionsTab() {
+  const { extensionOptions, setExtensionOptions } = useExtensionOptions();
   const [excludedProtocols, setExcludedProtocols] = useState(deserializeExcludedOption(extensionOptions.excludedProtocols));
   const [excludedSites, setExcludedSites] = useState(deserializeExcludedOption(extensionOptions.excludedSites));
   const [excludedFileTypes, setExcludedFileTypes] = useState(deserializeExcludedOption(extensionOptions.excludedFileTypes));
@@ -24,38 +25,24 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
   const [theme, setTheme] = useState(extensionOptions.theme);
   const [alertProps, setAlertProps] = useState(new AlertProps());
 
-  function serializeExcludedOption(excludedOptions: string) {
-    return excludedOptions
-      .trim()
-      .split(/\s*,+\s*/)
-      .filter((s) => s !== "");
-  }
-
   useEffect(() => {
-    setCaptureDownloads(extensionOptions.captureDownloads);
-    setCaptureServer(extensionOptions.captureServer);
     setExcludedProtocols(deserializeExcludedOption(extensionOptions.excludedProtocols));
     setExcludedSites(deserializeExcludedOption(extensionOptions.excludedSites));
     setExcludedFileTypes(deserializeExcludedOption(extensionOptions.excludedFileTypes));
     setUseCompleteFilePath(extensionOptions.useCompleteFilePath);
     setTheme(extensionOptions.theme);
   }, [
-    extensionOptions.captureDownloads,
-    extensionOptions.captureServer,
     extensionOptions.excludedFileTypes,
     extensionOptions.excludedProtocols,
     extensionOptions.excludedSites,
     extensionOptions.theme,
     extensionOptions.useCompleteFilePath,
-    deserializeExcludedOption,
   ]);
 
   const onClickSaveExtensionOptions = async () => {
     try {
       const newExtensionOptions = await new ExtensionOptions(
         extensionOptions.servers,
-        captureServer,
-        captureDownloads,
         serializeExcludedOption(excludedProtocols),
         serializeExcludedOption(excludedSites),
         serializeExcludedOption(excludedFileTypes),
@@ -118,7 +105,7 @@ function ExtensionOptionsTab({ extensionOptions, setExtensionOptions }: Props) {
       </Col>
 
       <Col xs={12} sm={12} className="mb-3">
-        <Button variant="primary" onClick={onClickSaveExtensionOptions} disabled={captureDownloads && captureServer === ""}>
+        <Button variant="primary" onClick={onClickSaveExtensionOptions}>
           {browser.i18n.getMessage("serverOptionsSave")}
         </Button>
       </Col>

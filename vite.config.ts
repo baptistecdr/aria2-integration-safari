@@ -7,44 +7,45 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
 
-const minify = process.env.NODE_ENV === "production" ? "esbuild" : false;
-const cssMinify = process.env.NODE_ENV === "production" ? "esbuild" : false;
-
 // https://vitejs.dev/config/
-export default defineConfig({
-  root: r("src"),
-  publicDir: r("public"),
-  build: {
-    target: "ES2023",
-    cssMinify,
-    minify,
-    rollupOptions: {
-      input: {
-        background: r("src", "background", "background.ts"),
-        options: r("src", "options", "options.html"),
-        popup: r("src", "popup", "popup.html"),
+export default defineConfig(({ mode }) => {
+  const minify = !(mode === "development") && "esbuild";
+  return {
+    root: r("src"),
+    publicDir: r("public"),
+    build: {
+      target: "ES2023",
+      minify,
+      cssMinify: minify,
+      sourcemap: mode === "development",
+      rollupOptions: {
+        input: {
+          background: r("src", "background", "background.ts"),
+          options: r("src", "options", "options.html"),
+          popup: r("src", "popup", "popup.html"),
+        },
+        output: {
+          dir: r("Shared (Extension)", "Resources"),
+          entryFileNames: "js/[name].js",
+          chunkFileNames: "js/[name].js",
+          assetFileNames: "media/[name].[ext]",
+        },
       },
-      output: {
-        dir: r("Shared (Extension)", "Resources"),
-        entryFileNames: "js/[name].js",
-        chunkFileNames: "js/[name].js",
-        assetFileNames: "media/[name].[ext]",
+    },
+    plugins: [react(), nodePolyfills(), tsconfigPaths()],
+    test: {
+      root: r("."),
+      environment: "jsdom",
+      globals: true,
+      setupFiles: [r("test", "setupTests.ts")],
+      coverage: {
+        reporter: ["text", "json", "json-summary", "html"],
+        reportsDirectory: r("coverage"),
+        include: ["public/**", "scripts/**", "src/**"],
+      },
+      chaiConfig: {
+        truncateThreshold: 0,
       },
     },
-  },
-  plugins: [react(), nodePolyfills(), tsconfigPaths()],
-  test: {
-    root: r("."),
-    environment: "jsdom",
-    globals: true,
-    setupFiles: [r("test", "setupTests.ts")],
-    coverage: {
-      reporter: ["text", "json", "json-summary", "html"],
-      reportsDirectory: r("coverage"),
-      include: ["public/**", "scripts/**", "src/**"],
-    },
-    chaiConfig: {
-      truncateThreshold: 0,
-    },
-  },
+  };
 });

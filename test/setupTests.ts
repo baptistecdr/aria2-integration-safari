@@ -83,7 +83,7 @@ const browser: { [k: string]: any } = {
     clearAll: vi.fn(),
   },
   i18n: {
-    getMessage: vi.fn((key: string) => `Translated: ${key}`),
+    getMessage: vi.fn((key: string) => key),
     getUILanguage: vi.fn(() => "en"),
   },
   action: {

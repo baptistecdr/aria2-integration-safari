@@ -1,55 +1,17 @@
-import React, { useEffect, useId, useState } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
-import { Container, Tab, Tabs } from "react-bootstrap";
-import browser from "webextension-polyfill";
-import ExtensionOptions from "@/models/extension-options";
-import { applyTheme } from "@/models/theme";
-import ServerTab from "./components/server-tab";
-
-const i18n = browser.i18n.getMessage;
-
-const container = document.getElementById("root");
-const root = createRoot(container!);
+import { Container } from "react-bootstrap";
+import { CurrentTabProvider } from "@/current-tab-provider";
+import { ExtensionOptionsProvider } from "@/extension-options-provider";
+import ServersTabs from "./components/servers-tabs";
 
 const width = /iPhone|iPod/.test(navigator.userAgent) ? "100%" : "576px";
 
-function Servers() {
-  const [extensionOptions, setExtensionOptions] = useState(new ExtensionOptions());
-  const [activeTab, setActiveTab] = useState("");
-
-  const tabServersId = useId();
-
-  useEffect(() => {
-    ExtensionOptions.fromStorage().then((result) => {
-      setExtensionOptions(result);
-      setActiveTab(Object.keys(result.servers)[0] ?? "");
-    });
-  }, []);
-
-  applyTheme(extensionOptions.theme);
-
-  if (Object.keys(extensionOptions.servers).length === 0) {
-    return (
-      <div className="text-center">
-        {i18n("popupNoServerFound1")} <br />
-        {i18n("popupNoServerFound2")}
-      </div>
-    );
-  }
-
-  return (
-    <Tabs id={tabServersId} defaultActiveKey="" activeKey={activeTab} onSelect={(k) => setActiveTab(k ?? "")} className="mb-3">
-      {Object.entries(extensionOptions.servers).map(([id, server]) => (
-        <Tab key={`tab-${id}`} eventKey={id} title={server.name}>
-          <ServerTab key={`server-${id}`} server={server} />
-        </Tab>
-      ))}
-    </Tabs>
-  );
-}
+const container = document.getElementById("root");
+const root = createRoot(container!);
 
 root.render(
   <React.StrictMode>
@@ -60,7 +22,11 @@ root.render(
       className="p-3"
       fluid
     >
-      <Servers />
+      <ExtensionOptionsProvider>
+        <CurrentTabProvider>
+          <ServersTabs />
+        </CurrentTabProvider>
+      </ExtensionOptionsProvider>
     </Container>
   </React.StrictMode>,
 );

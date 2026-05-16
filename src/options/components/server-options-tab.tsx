@@ -1,26 +1,42 @@
-import { type FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Alert, Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import browser from "webextension-polyfill";
-import type ExtensionOptions from "@/models/extension-options";
+import { useExtensionOptions } from "@/extension-options-provider";
 import Server from "@/models/server";
+import ServerIncognitoModeOptions from "@/models/server-incognito-mode-options";
 import AlertProps from "@/options/models/alert-props";
 
 interface Props {
-  extensionOptions: ExtensionOptions;
-  setExtensionOptions: React.Dispatch<React.SetStateAction<ExtensionOptions>>;
   server: Server;
   deleteServer: (server: Server) => Promise<void>;
 }
 
-function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, deleteServer }: Props) {
-  function deserializeRpcParameters(rpcParameters: Record<string, string>): string {
-    return Object.keys(rpcParameters)
-      .reduce((previousValue, currentValue) => {
-        return `${previousValue}${currentValue}: ${rpcParameters[currentValue]}\n`;
-      }, "")
-      .trim();
+const VALIDATION_TIMEOUT = 1500; // 1,5 s
+
+function deserializeRpcParameters(rpcParameters: Record<string, string>): string {
+  return Object.keys(rpcParameters)
+    .reduce((previousValue, currentValue) => {
+      return `${previousValue}${currentValue}: ${rpcParameters[currentValue]}\n`;
+    }, "")
+    .trim();
+}
+
+function serializeRpcParameters(rpcParameters: string): Record<string, string> {
+  const newRpcParameters: Record<string, string> = {};
+  for (const parameter of rpcParameters.trim().split("\n")) {
+    const [option, ...values] = parameter.split(/\s*:+\s*/);
+    // We need to join on ':' in case the parameter is, for example, proxy: http://localhost:8080
+    // option = proxy, values = ["http", "localhost", "8080"]
+    const value = values.join(":");
+    if (value !== "") {
+      newRpcParameters[option] = value;
+    }
   }
+  return newRpcParameters;
+}
+
+function ServerOptionsTab({ server, deleteServer }: Props) {
+  const { extensionOptions, setExtensionOptions } = useExtensionOptions();
 
   const [serverName, setServerName] = useState(server.name);
   const [serverHost, setServerHost] = useState(server.host);
@@ -28,24 +44,16 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
   const [serverSecure, setServerSecure] = useState(server.secure);
   const [serverSecret, setServerSecret] = useState(server.secret);
   const [serverRpcParameters, setServerRpcParameters] = useState(deserializeRpcParameters(server.rpcParameters));
+  const [serverIncognitoModeOverwriteRpcParameters, setServerIncognitoModeOverwriteRpcParameters] = useState(
+    server.incognitoModeOptions?.overwriteRpcParameters ?? false,
+  );
+  const [serverIncognitoModeRpcParameters, setServerIncognitoModeRpcParameters] = useState(
+    deserializeRpcParameters(server.incognitoModeOptions?.rpcParameters || {}),
+  );
 
   const [validated, setValidated] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [alertProps, setAlertProps] = useState(new AlertProps());
-
-  function serializeRpcParameters(rpcParameters: string): Record<string, string> {
-    const newRpcParameters: Record<string, string> = {};
-    for (const parameter of rpcParameters.trim().split("\n")) {
-      const [option, ...values] = parameter.split(/\s*:+\s*/);
-      // We need to join on ':' in case the parameter is, for example, proxy: http://localhost:8080
-      // option = proxy, values = ["http", "localhost", "8080"]
-      const value = values.join(":");
-      if (value !== "") {
-        newRpcParameters[option] = value;
-      }
-    }
-    return newRpcParameters;
-  }
 
   function serverUrl(): URL | null {
     try {
@@ -55,22 +63,30 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
     }
   }
 
-  async function onSubmitSaveServer(formEvent: FormEvent<HTMLFormElement>) {
+  async function onSubmitSaveServer(formEvent: SubmitEvent<HTMLFormElement>) {
     formEvent.preventDefault();
-    formEvent.stopPropagation();
     const form = formEvent.currentTarget;
     if (form.checkValidity()) {
       try {
         const newExtensionOptions = await extensionOptions.addServer(
-          new Server(server.uuid, serverName, serverSecure, serverHost, serverPort, "/jsonrpc", serverSecret, serializeRpcParameters(serverRpcParameters)),
+          new Server(
+            server.uuid,
+            serverName,
+            serverSecure,
+            serverHost,
+            serverPort,
+            "/jsonrpc",
+            serverSecret,
+            serializeRpcParameters(serverRpcParameters),
+            new ServerIncognitoModeOptions(serverIncognitoModeOverwriteRpcParameters, serializeRpcParameters(serverIncognitoModeRpcParameters)),
+          ),
         );
         setExtensionOptions(newExtensionOptions);
         setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
       } catch {
         setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
       }
-      const validationTimeout = 1500; // ms
-      window.setTimeout(() => setValidated(false), validationTimeout);
+      window.setTimeout(() => setValidated(false), VALIDATION_TIMEOUT);
     }
     setValidated(true);
   }
@@ -133,6 +149,40 @@ function ServerOptionsTab({ extensionOptions, setExtensionOptions, server, delet
         <Form.Group as={Col} controlId="form-rpc-parameters">
           <Form.Label>{browser.i18n.getMessage("serverOptionsRpcParameters")}</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder="split: 5" value={serverRpcParameters} onChange={(e) => setServerRpcParameters(e.target.value)} />
+          <Form.Text>{browser.i18n.getMessage("serverOptionsRpcParametersDescription")}</Form.Text>
+        </Form.Group>
+      </Row>
+
+      <div className="my-3">
+        <div className="d-flex align-items-center">
+          <hr className="flex-grow-1 m-0" />
+          <span className="px-2 small text-nowrap">{browser.i18n.getMessage("serverOptionsIncognitoMode")}</span>
+          <hr className="flex-grow-1 m-0" />
+        </div>
+      </div>
+
+      <Row className="mb-3">
+        <Form.Group controlId="form-im-overwrite-rpc-parameters">
+          <Form.Check
+            label={browser.i18n.getMessage("serverOptionsOverwriteRpcParameters")}
+            aria-label={browser.i18n.getMessage("serverOptionsOverwriteRpcParameters")}
+            checked={serverIncognitoModeOverwriteRpcParameters}
+            onChange={(e) => setServerIncognitoModeOverwriteRpcParameters(e.target.checked)}
+          />
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="form-im-rpc-parameters">
+          <Form.Label>{browser.i18n.getMessage("serverOptionsRpcParameters")}</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="split: 5"
+            disabled={!serverIncognitoModeOverwriteRpcParameters}
+            value={serverIncognitoModeRpcParameters}
+            onChange={(e) => setServerIncognitoModeRpcParameters(e.target.value)}
+          />
           <Form.Text>{browser.i18n.getMessage("serverOptionsRpcParametersDescription")}</Form.Text>
         </Form.Group>
       </Row>

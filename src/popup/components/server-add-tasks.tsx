@@ -1,34 +1,36 @@
-import { type FormEvent, useState } from "react";
+import type Aria2 from "@baptistecdr/aria2";
+import { type SubmitEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import browser from "webextension-polyfill";
-import { captureTorrentFromFile, captureURL } from "@/models/aria2-extension";
+import { captureTorrentFromFile, captureURL } from "@/aria2-extension";
+import { useCurrentTab } from "@/current-tab-provider";
 import type Server from "@/models/server";
 
 interface Props {
-  aria2: any;
+  aria2: Aria2;
   server: Server;
 }
 
 const DEFAULT_FORM_FILES = { files: null } as HTMLInputElement;
 
 function ServerAddTasks({ aria2, server }: Props) {
-  const [formUrls, setFormUrls] = useState([] as string[]);
+  const [formUrls, setFormUrls] = useState<string[]>([]);
   const [formFiles, setFormFiles] = useState(DEFAULT_FORM_FILES);
+  const currentTab = useCurrentTab();
 
-  const formAddUrlsOnSubmit = (formEvent: FormEvent<HTMLFormElement>) => {
+  const formAddUrlsOnSubmit = (formEvent: SubmitEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
     for (const url of formUrls) {
-      captureURL(aria2, server, url, "", "");
+      captureURL(aria2, server, url, "", "", !!currentTab?.incognito);
     }
     formEvent.currentTarget.reset();
     setFormUrls([]);
   };
 
-  const formAddFilesOnSubmit = (formEvent: FormEvent<HTMLFormElement>) => {
+  const formAddFilesOnSubmit = (formEvent: SubmitEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
     if (formFiles.files !== null) {
       for (let i = 0; i < formFiles.files.length; i += 1) {
-        captureTorrentFromFile(aria2, server, formFiles.files[i]);
+        captureTorrentFromFile(aria2, server, formFiles.files[i], !!currentTab?.incognito);
       }
       formEvent.currentTarget.reset();
       setFormFiles(DEFAULT_FORM_FILES);
@@ -61,7 +63,13 @@ function ServerAddTasks({ aria2, server }: Props) {
           <Form.Group controlId="form-add-files">
             <Form.Label>{browser.i18n.getMessage("addTaskAddFiles")}</Form.Label>
             <InputGroup>
-              <Form.Control type="file" size="sm" onChange={(e) => setFormFiles(e.target as HTMLInputElement)} multiple />
+              <Form.Control
+                type="file"
+                size="sm"
+                accept="application/x-bittorrent, .torrent, application/metalink4+xml, application/metalink+xml, .meta4, .metalink"
+                onChange={(e) => setFormFiles(e.target as HTMLInputElement)}
+                multiple
+              />
               <Button type="submit" variant="primary" size="sm">
                 {browser.i18n.getMessage("addTaskAdd")}
               </Button>

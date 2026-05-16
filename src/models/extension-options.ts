@@ -1,12 +1,9 @@
-import browser from "webextension-polyfill";
 import type Server from "@/models/server";
 import Theme from "@/models/theme";
 
 export default class ExtensionOptions {
   constructor(
     public readonly servers: Record<string, Server> = {},
-    public readonly captureServer: string = "",
-    public readonly captureDownloads: boolean = false,
     public readonly excludedProtocols: string[] = [],
     public readonly excludedSites: string[] = [],
     public readonly excludedFileTypes: string[] = [],
@@ -31,6 +28,10 @@ export default class ExtensionOptions {
       options: JSON.stringify(this),
     });
     return this;
+  }
+
+  withOverrides(overrides: Partial<ExtensionOptions>): ExtensionOptions {
+    return Object.assign(this.copy(), overrides);
   }
 
   async addServer(server: Server): Promise<ExtensionOptions> {

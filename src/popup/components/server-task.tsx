@@ -1,61 +1,52 @@
-import { type FilesizeOptions, filesize } from "filesize";
+import type Aria2 from "@baptistecdr/aria2";
+import { filesize } from "filesize";
 import { Duration } from "luxon";
 import { useId } from "react";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import browser from "webextension-polyfill";
 import type Server from "@/models/server";
+import ServerTaskManagement from "@/popup/components/server-task-management";
 import type { Task } from "@/popup/models/task";
-import ServerTaskManagement from "./server-task-management";
 
 interface Props {
   server: Server;
-  aria2: any;
+  aria2: Aria2;
   task: Task;
 }
 
-function ServerTask({ task, server, aria2 }: Props) {
-  const filesizeParameters = { base: 2 } as FilesizeOptions;
+const FILESIZE_BASE = { base: 2 } as const;
+const PROGRESS_TEXT_COLOR_THRESHOLD = 55;
 
-  function toFirstUppercase(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
+function formatETA(seconds: number): string {
+  const milliseconds = seconds * 1000;
+  const duration = Duration.fromMillis(milliseconds, {
+    locale: browser.i18n.getUILanguage(),
+  });
+  return duration.toISOTime()?.replace(/\.\d{3}$/, "") ?? "";
+}
 
-  function getProgressVariant(): string {
-    if (task.isComplete()) {
-      return "success";
-    }
-    if (task.isError() || task.isRemoved()) {
+function ServerTask({ server, aria2, task }: Props) {
+  const filename = task.getFilename();
+
+  const progressPercent = task.totalLength > 0 ? Math.round((task.completedLength * 100) / task.totalLength) : 0;
+
+  const getProgressVariant = () => {
+    if (task.status === "error") {
       return "danger";
-    }
-    if (task.isPaused() || task.isWaiting()) {
+    } else if (task.status === "complete") {
+      return "success";
+    } else if (task.status === "paused") {
       return "warning";
+    } else {
+      return "primary";
     }
-    return "primary";
-  }
+  };
 
-  function getStatus() {
-    const firstUppercaseStatus = toFirstUppercase(task.status);
-    return browser.i18n.getMessage(`taskStatus${firstUppercaseStatus}`);
-  }
+  const capitalizedStatus = task.status.charAt(0).toUpperCase() + task.status.slice(1);
+  const status = browser.i18n.getMessage(`taskStatus${capitalizedStatus}`);
 
-  function formatETA(seconds: number): string {
-    const milliseconds = seconds * 1000;
-    const duration = Duration.fromMillis(milliseconds, {
-      locale: browser.i18n.getUILanguage(),
-    });
-    return duration.toISOTime()?.replace(/\.\d{3}$/, "") ?? "";
-  }
+  const eta = task.downloadSpeed !== 0 ? formatETA((task.totalLength - task.completedLength) / task.downloadSpeed) : "∞";
 
-  function getETA(): string {
-    if (task.downloadSpeed !== 0) {
-      return formatETA((task.totalLength - task.completedLength) / task.downloadSpeed);
-    }
-    return "∞";
-  }
-
-  function getDownloadPer(per: number): number {
-    return Math.round((task.completedLength * per) / task.totalLength) || 0;
-  }
+  const progressTextColor = progressPercent <= PROGRESS_TEXT_COLOR_THRESHOLD ? "inherit" : "white";
 
   return (
     <Row className="mt-2 gx-0 ps-2 pe-2 small">
@@ -67,45 +58,40 @@ function ServerTask({ task, server, aria2 }: Props) {
               placement="top"
               overlay={
                 <Tooltip id={useId()}>
-                  <small>{task.getFilename()}</small>
+                  <small>{filename}</small>
                 </Tooltip>
               }
             >
-              <span>{task.getFilename()}</span>
+              <span>{filename}</span>
             </OverlayTrigger>
           </Col>
           <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
-            {getStatus()}, {filesize(task.completedLength, filesizeParameters)} / {filesize(task.totalLength, filesizeParameters)}
-            {task.isActive() && `, ${getETA()}`}
+            {status}, {filesize(task.completedLength, FILESIZE_BASE)} / {filesize(task.totalLength, FILESIZE_BASE)}
+            {task.isActive() && `, ${eta}`}
           </Col>
           {task.isActive() && (
             <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
-              {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" />{" "}
-              {filesize(task.downloadSpeed, filesizeParameters)}/s - <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, filesizeParameters)}/s
+              {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" /> {filesize(task.downloadSpeed, FILESIZE_BASE)}/s -{" "}
+              <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, FILESIZE_BASE)}/s
             </Col>
           )}
         </Row>
       </Col>
       <Col xs={3} sm={3} className="align-self-start text-end">
-        <ServerTaskManagement task={task} aria2={aria2} server={server} />
+        <ServerTaskManagement server={server} aria2={aria2} task={task} />
       </Col>
       <Col xs={12} sm={12}>
         <div className="progress position-relative">
           <div
             className={`progress-bar bg-${getProgressVariant()}`}
             role="progressbar"
-            style={{ width: `${getDownloadPer(100)}%` }}
-            aria-valuenow={getDownloadPer(1000)}
+            style={{ width: `${progressPercent}%` }}
+            aria-valuenow={progressPercent * 10}
             aria-valuemin={0}
             aria-valuemax={1000}
           />
-          <small
-            className="justify-content-center d-flex position-absolute w-100"
-            style={{
-              color: `${getDownloadPer(100) <= 55 ? "inherit" : "white"}`,
-            }}
-          >
-            {getDownloadPer(100)} %
+          <small className="justify-content-center d-flex position-absolute w-100" style={{ color: progressTextColor }}>
+            {progressPercent} %
           </small>
         </div>
       </Col>

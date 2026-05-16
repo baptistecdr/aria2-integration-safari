@@ -1,15 +1,12 @@
-// @ts-expect-error No type information for aria2
 import Aria2 from "@baptistecdr/aria2";
-import type { Cookies, Menus } from "webextension-polyfill";
-import browser from "webextension-polyfill";
-import { captureURL } from "@/models/aria2-extension";
+import { captureURL } from "@/aria2-extension";
 import ExtensionOptions from "@/models/extension-options";
 
-const CONTEXT_MENUS_PARENT_ID = "aria2-integration";
+export const CONTEXT_MENUS_PARENT_ID = "aria2-integration";
 
 let connections: Record<string, Aria2> = {};
 
-function createConnections(extensionOptions: ExtensionOptions) {
+export function createConnections(extensionOptions: ExtensionOptions) {
   const conns: Record<string, Aria2> = {};
   for (const [key, server] of Object.entries(extensionOptions.servers)) {
     conns[key] = new Aria2(server);
@@ -50,12 +47,14 @@ async function createSingleServerContextMenus(extensionOptions: ExtensionOptions
   }
 }
 
-async function createContextMenus(extensionOptions: ExtensionOptions) {
+export async function createContextMenus(extensionOptions: ExtensionOptions) {
   if (Object.keys(extensionOptions.servers).length === 1) {
     await createSingleServerContextMenus(extensionOptions);
   } else if (Object.keys(extensionOptions.servers).length > 1) {
     await createExtensionContextMenus(extensionOptions);
     await createServersContextMenus(extensionOptions);
+  } else {
+    await browser.contextMenus.removeAll();
   }
 }
 
@@ -78,7 +77,7 @@ browser.storage.onChanged.addListener(async (changes) => {
   }
 });
 
-function formatCookies(cookies: Cookies.Cookie[]) {
+export function formatCookies(cookies: browser.cookies.Cookie[]) {
   return cookies.reduce((acc, cookie) => {
     return `${acc}${cookie.name}=${cookie.value};`;
   }, "");
@@ -88,7 +87,7 @@ async function getCookies(url: string, cookieStoreID?: string): Promise<string> 
   return formatCookies(await browser.cookies.getAll({ url, storeId: cookieStoreID }));
 }
 
-function getSelectedUrls(onClickData: Menus.OnClickData): string[] {
+export function getSelectedUrls(onClickData: browser.menus.OnClickData): string[] {
   if (onClickData.linkUrl) {
     return [onClickData.linkUrl];
   }
@@ -107,6 +106,6 @@ browser.contextMenus?.onClicked.addListener(async (info, tab) => {
   const referer = tab?.url ?? "";
   const cookies = await getCookies(referer, tab?.cookieStoreId);
   for (const url of urls) {
-    captureURL(connection, server, url, referer, cookies);
+    captureURL(connection, server, url, referer, cookies, !!tab?.incognito);
   }
 });

@@ -1,7 +1,6 @@
-import "reflect-metadata";
-import { Transform, Type } from "class-transformer";
+import * as z from "zod/mini";
+import { FileSchema } from "@/popup/models/file";
 import basename from "@/stdlib";
-import type { File } from "./file";
 
 export enum TaskStatus {
   Active = "active",
@@ -12,75 +11,77 @@ export enum TaskStatus {
   Waiting = "waiting",
 }
 
-export class Task {
+const BittorrentSchema = z.object({
+  info: z.object({
+    name: z.string(),
+  }),
+});
+
+const parseIntStr = z.pipe(
+  z.string(),
+  z.transform((v) => Number.parseInt(v, 10)),
+);
+
+const TaskSchema = z.object({
+  bittorrent: z.optional(BittorrentSchema),
+  completedLength: parseIntStr,
+  connections: parseIntStr,
+  downloadSpeed: parseIntStr,
+  files: z.array(FileSchema),
+  gid: z.string(),
+  status: z.enum(TaskStatus),
+  totalLength: parseIntStr,
+  uploadLength: parseIntStr,
+  uploadSpeed: parseIntStr,
+  dir: z.string(),
+});
+
+export type TaskData = z.infer<typeof TaskSchema>;
+export type Bittorrent = z.infer<typeof BittorrentSchema>;
+
+export class Task implements TaskData {
   bittorrent?: Bittorrent;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   completedLength: number;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   connections: number;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   downloadSpeed: number;
-
-  files: File[];
-
+  files: TaskData["files"];
   gid: string;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
-  numSeeders: number;
-
   status: TaskStatus;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   totalLength: number;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   uploadLength: number;
-
-  @Type(() => Number)
-  @Transform(({ value }) => Number.parseInt(value, 10))
   uploadSpeed: number;
-
-  errorMessage: string;
-
   dir: string;
 
-  constructor(
-    completedLength: number,
-    connections: number,
-    downloadSpeed: number,
-    files: File[],
-    gid: string,
-    numSeeders: number,
-    status: TaskStatus,
-    totalLength: number,
-    uploadLength: number,
-    uploadSpeed: number,
-    errorMessage: string,
-    dir: string,
-    bittorrent?: Bittorrent,
-  ) {
-    this.bittorrent = bittorrent;
-    this.completedLength = completedLength;
-    this.connections = connections;
-    this.downloadSpeed = downloadSpeed;
-    this.files = files;
-    this.gid = gid;
-    this.numSeeders = numSeeders;
-    this.status = status;
-    this.totalLength = totalLength;
-    this.uploadLength = uploadLength;
-    this.uploadSpeed = uploadSpeed;
-    this.errorMessage = errorMessage;
-    this.dir = dir;
+  constructor(data: TaskData) {
+    this.bittorrent = data.bittorrent;
+    this.completedLength = data.completedLength;
+    this.connections = data.connections;
+    this.downloadSpeed = data.downloadSpeed;
+    this.files = data.files;
+    this.gid = data.gid;
+    this.status = data.status;
+    this.totalLength = data.totalLength;
+    this.uploadLength = data.uploadLength;
+    this.uploadSpeed = data.uploadSpeed;
+    this.dir = data.dir;
+  }
+
+  static parse(data: unknown): Task {
+    return new Task(TaskSchema.parse(data));
+  }
+
+  static parseMany(data: unknown[]): Task[] {
+    return data.map((item) => Task.parse(item));
+  }
+
+  getFilename(): string {
+    if (this.bittorrent?.info) {
+      return this.bittorrent.info.name;
+    }
+    if (this.files[0].path !== "") {
+      return basename(this.files[0].path);
+    }
+    return basename(this.files[0].uris[0].uri);
   }
 
   isActive(): boolean {
@@ -106,20 +107,4 @@ export class Task {
   isWaiting(): boolean {
     return this.status === TaskStatus.Waiting;
   }
-
-  getFilename(): string {
-    if (this.bittorrent?.info) {
-      return this.bittorrent.info.name;
-    }
-    if (this.files[0].path !== "") {
-      return basename(this.files[0].path);
-    }
-    return basename(this.files[0].uris[0].uri);
-  }
-}
-
-export interface Bittorrent {
-  info: {
-    name: string;
-  };
 }
