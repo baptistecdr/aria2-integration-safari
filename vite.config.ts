@@ -3,7 +3,6 @@ import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
 
@@ -13,6 +12,11 @@ export default defineConfig(({ mode }) => {
   return {
     root: r("src"),
     publicDir: r("public"),
+    resolve: {
+      alias: {
+        "@": r("src"),
+      },
+    },
     build: {
       target: "ES2023",
       minify,
@@ -32,7 +36,7 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [react(), nodePolyfills(), tsconfigPaths()],
+    plugins: [react(), nodePolyfills()],
     test: {
       root: r("."),
       environment: "jsdom",
