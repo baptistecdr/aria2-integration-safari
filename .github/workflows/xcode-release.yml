@@ -31,7 +31,12 @@ jobs:
         id: release_version
         run: |
           RELEASE_TYPE="${{ inputs.release_type }}"
-          RELEASE_VERSION=$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
+          # If it's a minor release, we need to get the current version from npm since we are not using prerelease version
+          if [[ "$RELEASE_TYPE" == "minor" ]]; then
+            RELEASE_VERSION=$(npm version | grep 'aria2-integration' | grep -oP "\d+\.\d+.\d+")
+          else
+            RELEASE_VERSION=$(npm version --no-git-tag-version --no-commit-hooks ${{ inputs.version-type }})
+          fi
           RELEASE_VERSION="v${RELEASE_VERSION}"
           SHORT_SHA=$(git rev-parse --short HEAD)
 
