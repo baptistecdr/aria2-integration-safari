@@ -8,21 +8,19 @@ const r = (...args: string[]) => resolve(__dirname, ...args);
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const minify = !(mode === "development") && "esbuild";
+  const isDev = mode === "development";
   return {
     root: r("src"),
     publicDir: r("public"),
     resolve: {
-      alias: {
-        "@": r("src"),
-      },
+      tsconfigPaths: true,
     },
     build: {
-      target: "ES2023",
-      minify,
-      cssMinify: minify,
-      sourcemap: mode === "development",
-      rollupOptions: {
+      target: "es2023",
+      minify: isDev ? false : "oxc",
+      cssMinify: isDev ? false : "lightningcss",
+      sourcemap: isDev,
+      rolldownOptions: {
         input: {
           background: r("src", "background", "background.ts"),
           options: r("src", "options", "options.html"),
