@@ -1,8 +1,11 @@
 import Aria2 from "@baptistecdr/aria2";
 import { captureURL } from "@/aria2-extension";
 import ExtensionOptions from "@/models/extension-options";
+import { type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
 export const CONTEXT_MENUS_PARENT_ID = "aria2-integration";
+export const ALARM_NAME = "set-badge";
+const ALARM_INTERVAL_SECONDS = 5;
 
 let connections: Record<string, Aria2> = {};
 
@@ -109,3 +112,30 @@ browser.contextMenus?.onClicked.addListener(async (info, tab) => {
     captureURL(connection, server, url, referer, cookies, !!tab?.incognito);
   }
 });
+
+async function getGlobalStat(aria2server: Aria2): Promise<GlobalStat> {
+  const globalStat = await aria2server.call("getGlobalStat", [], {});
+  return parseGlobalStat(globalStat);
+}
+
+browser.alarms.create(ALARM_NAME, {
+  periodInMinutes: ALARM_INTERVAL_SECONDS / 60,
+});
+
+browser.alarms.onAlarm.addListener(listenerOnAlarm);
+
+export async function listenerOnAlarm(alarm: browser.alarms.Alarm) {
+  if (alarm.name === ALARM_NAME) {
+    const numActives = Object.values(connections).map(async (server) => {
+      const globalStat = await getGlobalStat(server);
+      return globalStat.numActive;
+    });
+    const totalActive = await Promise.all(numActives).then((n) => n.reduce((partialSum, a) => partialSum + a, 0));
+    browser.action.setBadgeText({
+      text: totalActive ? totalActive.toString(10) : "",
+    });
+    browser.action.setBadgeBackgroundColor({
+      color: "#666666",
+    });
+  }
+}
