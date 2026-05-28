@@ -1,6 +1,6 @@
 <h3 align="center">Aria2 Integration</h3>
 <p align="center">
-     Send downloads, links, and torrent files directly to your Aria2 server.
+     Send downloads, links, and torrent files directly to your Aria2 server or Motrix instance.
     <br>
     <a href="https://github.com/baptistecdr/aria2-integration-safari/issues/new">Report bug</a>
     ·
