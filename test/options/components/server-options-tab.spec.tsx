@@ -46,6 +46,7 @@ describe("ServerOptionsTab", () => {
     expect(screen.getByLabelText("serverOptionsName")).toHaveValue("Test Server");
     expect(screen.getByLabelText("serverOptionsHost")).toHaveValue("localhost");
     expect(screen.getByLabelText("serverOptionsPort")).toHaveValue(6800);
+    expect(screen.getByLabelText("serverOptionsPath")).toHaveValue("/jsonrpc");
     expect(screen.getByLabelText("serverOptionsSecureConnection")).toBeChecked();
     expect(screen.getByLabelText("serverOptionsUrl")).toHaveValue("https://localhost:6800/jsonrpc");
     expect(screen.getByLabelText("serverOptionsSecret")).toHaveValue("secret123");
@@ -81,6 +82,9 @@ describe("ServerOptionsTab", () => {
     await userEvent.clear(screen.getByLabelText("serverOptionsPort"));
     await userEvent.type(screen.getByLabelText("serverOptionsPort"), "443");
 
+    await userEvent.clear(screen.getByLabelText("serverOptionsPath"));
+    await userEvent.type(screen.getByLabelText("serverOptionsPath"), "rpc");
+
     const secureCheckbox = screen.getByLabelText("serverOptionsSecureConnection");
     await userEvent.click(secureCheckbox);
 
@@ -95,12 +99,50 @@ describe("ServerOptionsTab", () => {
         name: "Updated Server",
         host: "127.0.0.1",
         port: 443,
+        path: "/rpc",
         secure: false,
         secret: "123secret",
       }),
     );
 
     expect(setExtensionOptions).toHaveBeenCalled();
+  });
+
+  it("formats path with a leading slash when it is missing", async () => {
+    render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
+
+    await userEvent.clear(screen.getByLabelText("serverOptionsPath"));
+    await userEvent.type(screen.getByLabelText("serverOptionsPath"), "jsonrpc");
+
+    expect(screen.getByLabelText("serverOptionsPath")).toHaveValue("/jsonrpc");
+    expect(screen.getByLabelText("serverOptionsUrl")).toHaveValue("https://localhost:6800/jsonrpc");
+
+    const saveButton = screen.getByText("serverOptionsSave");
+    await userEvent.click(saveButton);
+
+    expect(addServer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        path: "/jsonrpc",
+      }),
+    );
+  });
+
+  it("keeps the leading slash when the path already starts with one", async () => {
+    render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
+
+    await userEvent.clear(screen.getByLabelText("serverOptionsPath"));
+    await userEvent.type(screen.getByLabelText("serverOptionsPath"), "rpc/v2");
+
+    expect(screen.getByLabelText("serverOptionsPath")).toHaveValue("/rpc/v2");
+
+    const saveButton = screen.getByText("serverOptionsSave");
+    await userEvent.click(saveButton);
+
+    expect(addServer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        path: "/rpc/v2",
+      }),
+    );
   });
 
   it("calls deleteServer when delete button is clicked", async () => {

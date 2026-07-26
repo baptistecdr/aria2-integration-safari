@@ -13,6 +13,10 @@ interface Props {
 
 const VALIDATION_TIMEOUT = 1500; // 1,5 s
 
+function formatPath(path: string): string {
+  return path.startsWith("/") ? path : `/${path}`;
+}
+
 function deserializeRpcParameters(rpcParameters: Record<string, string>): string {
   return Object.keys(rpcParameters)
     .reduce((previousValue, currentValue) => {
@@ -42,6 +46,7 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
   const [serverHost, setServerHost] = useState(server.host);
   const [serverPort, setServerPort] = useState(server.port);
   const [serverSecure, setServerSecure] = useState(server.secure);
+  const [serverPath, setServerPath] = useState(server.path);
   const [serverSecret, setServerSecret] = useState(server.secret);
   const [serverRpcParameters, setServerRpcParameters] = useState(deserializeRpcParameters(server.rpcParameters));
   const [serverIncognitoModeOverwriteRpcParameters, setServerIncognitoModeOverwriteRpcParameters] = useState(
@@ -57,7 +62,7 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
 
   function serverUrl(): URL | null {
     try {
-      return new URL(`http${serverSecure ? "s" : ""}://${serverHost}:${serverPort}/jsonrpc`);
+      return new URL(`http${serverSecure ? "s" : ""}://${serverHost}:${serverPort}${serverPath}`);
     } catch (_) {
       return null;
     }
@@ -75,7 +80,7 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
             serverSecure,
             serverHost,
             serverPort,
-            "/jsonrpc",
+            serverPath,
             serverSecret,
             serializeRpcParameters(serverRpcParameters),
             new ServerIncognitoModeOptions(serverIncognitoModeOverwriteRpcParameters, serializeRpcParameters(serverIncognitoModeRpcParameters)),
@@ -119,13 +124,18 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
           <Form.Control type="number" min={0} max={49151} value={serverPort} required onChange={(e) => setServerPort(Number.parseInt(e.target.value, 10))} />
         </Form.Group>
 
-        <Form.Group as={Col} controlId="form-server-secure">
-          <Form.Label>{browser.i18n.getMessage("serverOptionsSecureConnection")}</Form.Label>
-          <Form.Check checked={serverSecure} onChange={(e) => setServerSecure(e.target.checked)} />
+        <Form.Group as={Col} controlId="form-server-path">
+          <Form.Label>{browser.i18n.getMessage("serverOptionsPath")}</Form.Label>
+          <Form.Control type="text" value={serverPath} required onChange={(e) => setServerPath(formatPath(e.target.value))} />
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
+        <Form.Group as={Col} controlId="form-server-secure">
+          <Form.Label>{browser.i18n.getMessage("serverOptionsSecureConnection")}</Form.Label>
+          <Form.Check checked={serverSecure} onChange={(e) => setServerSecure(e.target.checked)} />
+        </Form.Group>
+
         <Form.Group as={Col} controlId="form-server-url">
           <Form.Label>{browser.i18n.getMessage("serverOptionsUrl")}</Form.Label>
           <Form.Control type="text" value={serverUrl()?.toString() ?? ""} disabled={true} />
