@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-const r = (...args: string[]) => resolve(__dirname, ...args);
+const r = (...args: string[]) => resolve(import.meta.dirname, ...args);
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
