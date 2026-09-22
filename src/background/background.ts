@@ -107,8 +107,8 @@ browser.contextMenus?.onClicked.addListener(async (info, tab) => {
 
   const urls = getSelectedUrls(info);
   const referer = tab?.url ?? "";
-  const cookies = await getCookies(referer, tab?.cookieStoreId);
   for (const url of urls) {
+    const cookies = await getCookies(url, tab?.cookieStoreId);
     captureURL(connection, server, url, referer, cookies, !!tab?.incognito);
   }
 });
