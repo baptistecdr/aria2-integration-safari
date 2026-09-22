@@ -19,7 +19,7 @@
     "strictNullChecks": true,
     "target": "ES2023",
     "useDefineForClassFields": true,
-    "types": ["bootstrap", "firefox-webext-browser", "jest", "luxon", "node", "react", "react-dom"]
+    "types": ["bootstrap", "firefox-webext-browser", "luxon", "node", "react", "react-dom", "vitest/globals"]
   },
   "include": ["src", "test"]
 }
