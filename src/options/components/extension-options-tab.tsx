@@ -52,7 +52,8 @@ function ExtensionOptionsTab() {
       );
       setExtensionOptions(newExtensionOptions);
       setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
-    } catch {
+    } catch (error) {
+      console.error(error);
       setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
     }
   };

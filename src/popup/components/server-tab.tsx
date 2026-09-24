@@ -53,7 +53,8 @@ function ServerTab({ server }: Props) {
       const fetchedTasks = await getTasks(aria2, stat.numWaiting, stat.numStopped);
       setGlobalStat(stat);
       setTasks(fetchedTasks);
-    } catch (_e: unknown) {
+    } catch (error) {
+      console.error(error);
       setDefaultMessage(browser.i18n.getMessage("serverError"));
     }
     setLoading(false);

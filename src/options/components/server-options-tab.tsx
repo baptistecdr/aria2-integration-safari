@@ -93,7 +93,8 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
         );
         setExtensionOptions(newExtensionOptions);
         setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
-      } catch {
+      } catch (error) {
+        console.error(error);
         setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
       }
       window.setTimeout(() => setValidated(false), VALIDATION_TIMEOUT);
