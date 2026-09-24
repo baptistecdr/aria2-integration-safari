@@ -3,7 +3,7 @@ import { type SubmitEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { captureTorrentFromFile, captureURL } from "@/aria2-extension";
 import { useCurrentTab } from "@/current-tab-provider";
-import type Server from "@/models/server";
+import type { Server } from "@/models/server";
 
 interface Props {
   aria2: Aria2;

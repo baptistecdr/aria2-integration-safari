@@ -2,8 +2,9 @@ import { type SubmitEvent, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Alert, Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useExtensionOptions } from "@/extension-options-provider";
-import Server from "@/models/server";
-import ServerIncognitoModeOptions from "@/models/server-incognito-mode-options";
+import { ExtensionOptions } from "@/models/extension-options";
+import { Server } from "@/models/server";
+import { ServerIncognitoModeOptions } from "@/models/server-incognito-mode-options";
 import AlertProps from "@/options/models/alert-props";
 
 interface Props {
@@ -73,18 +74,22 @@ function ServerOptionsTab({ server, deleteServer }: Props) {
     const form = formEvent.currentTarget;
     if (form.checkValidity()) {
       try {
-        const newExtensionOptions = await extensionOptions.addServer(
-          new Server(
-            server.uuid,
-            serverName,
-            serverSecure,
-            serverHost,
-            serverPort,
-            serverPath,
-            serverSecret,
-            serializeRpcParameters(serverRpcParameters),
-            new ServerIncognitoModeOptions(serverIncognitoModeOverwriteRpcParameters, serializeRpcParameters(serverIncognitoModeRpcParameters)),
-          ),
+        const newExtensionOptions = await ExtensionOptions.addServer(
+          extensionOptions,
+          Server.create({
+            uuid: server.uuid,
+            name: serverName,
+            secure: serverSecure,
+            host: serverHost,
+            port: serverPort,
+            path: serverPath,
+            secret: serverSecret,
+            rpcParameters: serializeRpcParameters(serverRpcParameters),
+            incognitoModeOptions: ServerIncognitoModeOptions.create({
+              overwriteRpcParameters: serverIncognitoModeOverwriteRpcParameters,
+              rpcParameters: serializeRpcParameters(serverIncognitoModeRpcParameters),
+            }),
+          }),
         );
         setExtensionOptions(newExtensionOptions);
         setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));

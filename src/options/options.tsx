@@ -4,7 +4,8 @@ import "bootstrap";
 import React, { useId, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import { ExtensionOptionsProvider, useExtensionOptions } from "@/extension-options-provider";
-import Server from "@/models/server";
+import { ExtensionOptions } from "@/models/extension-options";
+import { Server } from "@/models/server";
 import ExtensionOptionsTab from "@/options/components/extension-options-tab";
 import ServerOptionsTab from "@/options/components/server-options-tab";
 
@@ -18,14 +19,14 @@ function Options() {
   const { extensionOptions, setExtensionOptions } = useExtensionOptions();
 
   async function addServer() {
-    const server = new Server();
-    const newExtensionOptions = await extensionOptions.addServer(server);
+    const server = Server.create();
+    const newExtensionOptions = await ExtensionOptions.addServer(extensionOptions, server);
     setExtensionOptions(newExtensionOptions);
     setActiveTab(server.uuid);
   }
 
   const deleteServer = async (server: Server) => {
-    const newExtensionOptions = await extensionOptions.deleteServer(server);
+    const newExtensionOptions = await ExtensionOptions.deleteServer(extensionOptions, server);
     const serverKeys = Object.keys(newExtensionOptions.servers);
     let newActiveTab = EXTENSION_OPTIONS_TAB;
     if (serverKeys.length !== 0) {

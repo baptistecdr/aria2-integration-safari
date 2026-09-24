@@ -2,7 +2,7 @@ import type Aria2 from "@baptistecdr/aria2";
 import { Button } from "react-bootstrap";
 import { captureURL } from "@/aria2-extension";
 import { useCurrentTab } from "@/current-tab-provider";
-import type Server from "@/models/server";
+import type { Server } from "@/models/server";
 import type { Task } from "@/popup/models/task";
 
 interface Props {

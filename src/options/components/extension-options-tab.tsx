@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import { useExtensionOptions } from "@/extension-options-provider";
-import ExtensionOptions from "@/models/extension-options";
+import { ExtensionOptions } from "@/models/extension-options";
 import Theme from "@/models/theme";
 import AlertProps from "@/options/models/alert-props";
 
@@ -41,14 +41,15 @@ function ExtensionOptionsTab() {
 
   const onClickSaveExtensionOptions = async () => {
     try {
-      const newExtensionOptions = await new ExtensionOptions(
-        extensionOptions.servers,
-        serializeExcludedOption(excludedProtocols),
-        serializeExcludedOption(excludedSites),
-        serializeExcludedOption(excludedFileTypes),
-        useCompleteFilePath,
-        theme,
-      ).toStorage();
+      const newExtensionOptions = await ExtensionOptions.toStorage(
+        ExtensionOptions.withOverrides(extensionOptions, {
+          excludedProtocols: serializeExcludedOption(excludedProtocols),
+          excludedSites: serializeExcludedOption(excludedSites),
+          excludedFileTypes: serializeExcludedOption(excludedFileTypes),
+          useCompleteFilePath,
+          theme,
+        }),
+      );
       setExtensionOptions(newExtensionOptions);
       setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
     } catch {

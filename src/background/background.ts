@@ -1,6 +1,6 @@
 import Aria2 from "@baptistecdr/aria2";
 import { captureURL } from "@/aria2-extension";
-import ExtensionOptions from "@/models/extension-options";
+import { ExtensionOptions } from "@/models/extension-options";
 import { type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
 export const CONTEXT_MENUS_PARENT_ID = "aria2-integration";

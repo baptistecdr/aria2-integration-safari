@@ -2,7 +2,7 @@ import Aria2 from "@baptistecdr/aria2";
 import { filesize } from "filesize";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import type Server from "@/models/server";
+import type { Server } from "@/models/server";
 import ServerAddTasks from "@/popup/components/server-add-tasks";
 import ServerTask from "@/popup/components/server-task";
 import { Task } from "@/popup/models/task";
