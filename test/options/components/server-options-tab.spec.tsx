@@ -157,6 +157,28 @@ describe("ServerOptionsTab", () => {
     expect(deleteServer).toHaveBeenCalledWith(server);
   });
 
+  it("trims whitespace around RPC parameter names", async () => {
+    render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
+
+    const serverOptionsRpcParameters = await screen.findAllByLabelText("serverOptionsRpcParameters");
+
+    await userEvent.clear(serverOptionsRpcParameters[0]);
+    await userEvent.type(serverOptionsRpcParameters[0], "split: 5\n  proxy: http://localhost:8080");
+
+    const saveButton = screen.getByText("serverOptionsSave");
+    await userEvent.click(saveButton);
+
+    expect(addServerSpy).toHaveBeenCalledWith(
+      extensionOptions,
+      expect.objectContaining({
+        rpcParameters: {
+          split: "5",
+          proxy: "http://localhost:8080",
+        },
+      }),
+    );
+  });
+
   it("serializes and deserializes RPC parameters correctly", async () => {
     render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
 

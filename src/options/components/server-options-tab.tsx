@@ -34,7 +34,7 @@ function serializeRpcParameters(rpcParameters: string): Record<string, string> {
     // option = proxy, values = ["http", "localhost", "8080"]
     const value = values.join(":");
     if (value !== "") {
-      newRpcParameters[option] = value;
+      newRpcParameters[option.trim()] = value;
     }
   }
   return newRpcParameters;
