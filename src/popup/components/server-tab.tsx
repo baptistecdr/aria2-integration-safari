@@ -14,7 +14,7 @@ import { LoadingSpinner } from "@/popup/components/loading-spinner";
 import { defaultGlobalStat, type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
 const FILESIZE_BASE = { base: 2 } as const;
-const POLL_INTERVAL_MS = 1000; // 1 s
+const POLL_INTERVAL_MS = 1000; // 1 second
 
 interface Props {
   server: Server;
@@ -78,11 +78,11 @@ function ServerTab({ server }: Props) {
   return (
     <Container fluid>
       <Row>
-        <Col xs={6} sm={6} className="align-self-baseline text-start stats">
+        <Col xs={6} className="align-self-baseline text-start stats">
           <i className="bi-arrow-down" /> {filesize(globalStat.downloadSpeed, FILESIZE_BASE)}/s - <i className="bi-arrow-up" />{" "}
           {filesize(globalStat.uploadSpeed, FILESIZE_BASE)}/s
         </Col>
-        <Col xs={6} sm={6} className="align-self-baseline text-end">
+        <Col xs={6} className="align-self-baseline text-end">
           <Button variant="primary" size="sm" className="btn-left" onClick={toggleAddTask}>
             {showAddTask ? i18n("serverCancel") : i18n("serverAdd")}
           </Button>
@@ -90,14 +90,14 @@ function ServerTab({ server }: Props) {
             {i18n("serverPurge")}
           </Button>
         </Col>
-        <Col xs={12} sm={12}>
+        <Col xs={12}>
           <hr className="mt-2 mb-2" />
         </Col>
       </Row>
       {showAddTask && <ServerAddTasks aria2={aria2} server={server} />}
       {showTaskList && tasks.length === 0 && (
         <Row>
-          <Col xs={12} sm={12}>
+          <Col xs={12}>
             <em>{defaultMessage}</em>
           </Col>
         </Row>
