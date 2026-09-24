@@ -55,6 +55,34 @@ describe("ServersTabs", () => {
     });
   });
 
+  it("mounts only the active server tab", async () => {
+    const servers = {
+      s1: { name: "Server1" },
+      s2: { name: "Server2" },
+    } as unknown as Record<string, Server>;
+
+    vi.mocked(useExtensionOptions).mockReturnValue({
+      extensionOptions: {
+        servers,
+      } as ExtensionOptions,
+      setExtensionOptions: vi.fn(),
+    } as any);
+
+    render(<ServersTabs />);
+
+    await waitFor(() => {
+      expect(screen.getByText("ServerTab Server1")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("ServerTab Server2")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("tab", { name: "Server2" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("ServerTab Server2")).toBeInTheDocument();
+      expect(screen.queryByText("ServerTab Server1")).not.toBeInTheDocument();
+    });
+  });
+
   it("switches active tab on tab click", async () => {
     const servers = {
       s1: { name: "Server1" },
