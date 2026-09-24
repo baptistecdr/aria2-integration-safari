@@ -15,12 +15,16 @@ function ServerTaskManagement({ server, aria2, task }: Props) {
   const currentTab = useCurrentTab();
 
   const onClickPlayPauseRetry = async () => {
-    if (task.isActive()) {
-      await aria2.call("aria2.pause", task.gid);
-    } else if (task.isPaused()) {
-      await aria2.call("aria2.unpause", task.gid);
-    } else if (task.isError()) {
-      await captureURL(aria2, server, task.files[0].uris[0].uri, "", "", !!currentTab?.incognito, task.dir, task.getFilename());
+    try {
+      if (task.isActive()) {
+        await aria2.call("aria2.pause", task.gid);
+      } else if (task.isPaused()) {
+        await aria2.call("aria2.unpause", task.gid);
+      } else if (task.isError()) {
+        await captureURL(aria2, server, task.files[0].uris[0].uri, "", "", !!currentTab?.incognito, task.dir, task.getFilename());
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

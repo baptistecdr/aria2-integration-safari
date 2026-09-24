@@ -1,5 +1,5 @@
 import Aria2 from "@baptistecdr/aria2";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { expect, vi } from "vitest";
 import { captureURL } from "@/aria2-extension";
 import type { Server } from "@/models/server";
@@ -77,6 +77,17 @@ describe("ServerTaskManagement", () => {
     render(<ServerTaskManagement server={server} aria2={aria2} task={task} />);
     fireEvent.click(screen.getByRole("button", { name: "play-pause-retry" }));
     expect(captureURL).toHaveBeenCalledWith(aria2, server, "http://test", "", "", false, "/downloads", "file.txt");
+  });
+
+  it("logs the error when the task action fails", async () => {
+    const error = new Error("RPC failure");
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(aria2.call).mockRejectedValueOnce(error);
+    const task = createTask({ isActive: () => true });
+    render(<ServerTaskManagement server={server} aria2={aria2} task={task} />);
+    fireEvent.click(screen.getByRole("button", { name: "play-pause-retry" }));
+    await waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledWith(error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("calls aria2.removeDownloadResult when deleting completed task", () => {
