@@ -2,18 +2,19 @@ import Aria2 from "@baptistecdr/aria2";
 import { filesize } from "filesize";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import type Server from "@/models/server";
+import type { Server } from "@/models/server";
 import ServerAddTasks from "@/popup/components/server-add-tasks";
 import ServerTask from "@/popup/components/server-task";
 import { Task } from "@/popup/models/task";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import "./server-tab.css";
+import i18n from "@/i18n";
 import { LoadingSpinner } from "@/popup/components/loading-spinner";
 import { defaultGlobalStat, type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
 const FILESIZE_BASE = { base: 2 } as const;
-const POLL_INTERVAL_MS = 1000; // 1 s
+const POLL_INTERVAL_MS = 1000; // 1 second
 
 interface Props {
   server: Server;
@@ -37,7 +38,7 @@ function ServerTab({ server }: Props) {
   const [globalStat, setGlobalStat] = useState(defaultGlobalStat());
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showAddTask, setShowAddTask] = useState(false);
-  const [defaultMessage, setDefaultMessage] = useState(browser.i18n.getMessage("serverNoTasks"));
+  const [defaultMessage, setDefaultMessage] = useState(i18n("serverNoTasks"));
 
   const onClickPurge = () => {
     aria2.call("aria2.purgeDownloadResult");
@@ -53,8 +54,9 @@ function ServerTab({ server }: Props) {
       const fetchedTasks = await getTasks(aria2, stat.numWaiting, stat.numStopped);
       setGlobalStat(stat);
       setTasks(fetchedTasks);
-    } catch (_e: unknown) {
-      setDefaultMessage(browser.i18n.getMessage("serverError"));
+    } catch (error) {
+      console.error(error);
+      setDefaultMessage(i18n("serverError"));
     }
     setLoading(false);
   }, [aria2]);
@@ -76,26 +78,26 @@ function ServerTab({ server }: Props) {
   return (
     <Container fluid>
       <Row>
-        <Col xs={6} sm={6} className="align-self-baseline text-start stats">
+        <Col xs={6} className="align-self-baseline text-start stats">
           <i className="bi-arrow-down" /> {filesize(globalStat.downloadSpeed, FILESIZE_BASE)}/s - <i className="bi-arrow-up" />{" "}
           {filesize(globalStat.uploadSpeed, FILESIZE_BASE)}/s
         </Col>
-        <Col xs={6} sm={6} className="align-self-baseline text-end">
+        <Col xs={6} className="align-self-baseline text-end">
           <Button variant="primary" size="sm" className="btn-left" onClick={toggleAddTask}>
-            {showAddTask ? browser.i18n.getMessage("serverCancel") : browser.i18n.getMessage("serverAdd")}
+            {showAddTask ? i18n("serverCancel") : i18n("serverAdd")}
           </Button>
           <Button variant="danger" size="sm" className="btn-right" onClick={onClickPurge}>
-            {browser.i18n.getMessage("serverPurge")}
+            {i18n("serverPurge")}
           </Button>
         </Col>
-        <Col xs={12} sm={12}>
+        <Col xs={12}>
           <hr className="mt-2 mb-2" />
         </Col>
       </Row>
       {showAddTask && <ServerAddTasks aria2={aria2} server={server} />}
       {showTaskList && tasks.length === 0 && (
         <Row>
-          <Col xs={12} sm={12}>
+          <Col xs={12}>
             <em>{defaultMessage}</em>
           </Col>
         </Row>

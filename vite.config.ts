@@ -2,7 +2,6 @@
 import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const r = (...args: string[]) => resolve(import.meta.dirname, ...args);
 
@@ -34,7 +33,7 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [react(), nodePolyfills()],
+    plugins: [react()],
     test: {
       root: r("."),
       environment: "jsdom",

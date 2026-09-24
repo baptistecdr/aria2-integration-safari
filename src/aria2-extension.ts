@@ -1,4 +1,5 @@
-import type Server from "@/models/server";
+import type Aria2 from "@baptistecdr/aria2";
+import type { Server } from "@/models/server";
 
 export function encodeFileToBase64(file: File | Blob) {
   return new Promise((resolve, reject) => {
@@ -28,7 +29,7 @@ export async function download(url: string): Promise<Blob> {
   return res.blob();
 }
 
-export async function captureTorrentFromFile(aria2: any, server: Server, file: File, isInIncognitoMode: boolean) {
+export async function captureTorrentFromFile(aria2: Aria2, server: Server, file: File, isInIncognitoMode: boolean) {
   const blobAsBase64 = await encodeFileToBase64(file);
   const aria2Parameters: any = {
     ...(server.incognitoModeOptions?.overwriteRpcParameters && isInIncognitoMode ? server.incognitoModeOptions.rpcParameters : server.rpcParameters),
@@ -39,7 +40,7 @@ export async function captureTorrentFromFile(aria2: any, server: Server, file: F
   return aria2.call("aria2.addMetalink", blobAsBase64, [], aria2Parameters);
 }
 
-export async function captureTorrentFromURL(aria2: any, server: Server, url: string, isInIncognitoMode: boolean, directory?: string, filename?: string) {
+export async function captureTorrentFromURL(aria2: Aria2, server: Server, url: string, isInIncognitoMode: boolean, directory?: string, filename?: string) {
   const blob = await download(url);
   const blobAsBase64 = await encodeFileToBase64(blob);
   const aria2Parameters: any = {
@@ -55,7 +56,7 @@ export async function captureTorrentFromURL(aria2: any, server: Server, url: str
 }
 
 export async function captureURL(
-  aria2: any,
+  aria2: Aria2,
   server: Server,
   url: string,
   referer: string,

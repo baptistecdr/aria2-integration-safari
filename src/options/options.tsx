@@ -4,7 +4,9 @@ import "bootstrap";
 import React, { useId, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import { ExtensionOptionsProvider, useExtensionOptions } from "@/extension-options-provider";
-import Server from "@/models/server";
+import i18n from "@/i18n";
+import { ExtensionOptions } from "@/models/extension-options";
+import { Server } from "@/models/server";
 import ExtensionOptionsTab from "@/options/components/extension-options-tab";
 import ServerOptionsTab from "@/options/components/server-options-tab";
 
@@ -17,20 +19,17 @@ function Options() {
   const [activeTab, setActiveTab] = useState(EXTENSION_OPTIONS_TAB);
   const { extensionOptions, setExtensionOptions } = useExtensionOptions();
 
-  async function addServer() {
-    const server = new Server();
-    const newExtensionOptions = await extensionOptions.addServer(server);
+  const addServer = async () => {
+    const server = Server.create();
+    const newExtensionOptions = await ExtensionOptions.addServer(extensionOptions, server);
     setExtensionOptions(newExtensionOptions);
     setActiveTab(server.uuid);
-  }
+  };
 
   const deleteServer = async (server: Server) => {
-    const newExtensionOptions = await extensionOptions.deleteServer(server);
+    const newExtensionOptions = await ExtensionOptions.deleteServer(extensionOptions, server);
     const serverKeys = Object.keys(newExtensionOptions.servers);
-    let newActiveTab = EXTENSION_OPTIONS_TAB;
-    if (serverKeys.length !== 0) {
-      [newActiveTab] = serverKeys;
-    }
+    const newActiveTab = serverKeys.length === 0 ? EXTENSION_OPTIONS_TAB : serverKeys[0];
     setExtensionOptions(newExtensionOptions);
     setActiveTab(newActiveTab);
   };
@@ -54,7 +53,7 @@ function Options() {
     <Tabs id={tabsId} defaultActiveKey={EXTENSION_OPTIONS_TAB} activeKey={activeTab} onSelect={handleTabSelect}>
       {renderServerTabs()}
       <Tab eventKey={ADD_SERVER_TAB} title="+" />
-      <Tab eventKey={EXTENSION_OPTIONS_TAB} title={browser.i18n.getMessage("extensionOptionsTitle")}>
+      <Tab eventKey={EXTENSION_OPTIONS_TAB} title={i18n("extensionOptionsTitle")}>
         <ExtensionOptionsTab />
       </Tab>
     </Tabs>

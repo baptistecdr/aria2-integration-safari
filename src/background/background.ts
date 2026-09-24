@@ -1,6 +1,7 @@
 import Aria2 from "@baptistecdr/aria2";
 import { captureURL } from "@/aria2-extension";
-import ExtensionOptions from "@/models/extension-options";
+import i18n from "@/i18n";
+import { ExtensionOptions } from "@/models/extension-options";
 import { type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
 export const CONTEXT_MENUS_PARENT_ID = "aria2-integration";
@@ -21,7 +22,7 @@ async function createExtensionContextMenus(extensionOptions: ExtensionOptions) {
   await browser.contextMenus?.removeAll();
   if (Object.keys(extensionOptions.servers).length > 0) {
     browser.contextMenus?.create({
-      title: browser.i18n.getMessage("contextMenusTitle"),
+      title: i18n("contextMenusTitle"),
       id: CONTEXT_MENUS_PARENT_ID,
       contexts: ["link", "selection"],
     });
@@ -43,7 +44,7 @@ async function createSingleServerContextMenus(extensionOptions: ExtensionOptions
   await browser.contextMenus?.removeAll();
   for (const [id] of Object.entries(extensionOptions.servers)) {
     browser.contextMenus?.create({
-      title: browser.i18n.getMessage("contextMenusTitle"),
+      title: i18n("contextMenusTitle"),
       id,
       contexts: ["link", "selection"],
     });

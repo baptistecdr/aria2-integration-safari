@@ -1,7 +1,7 @@
 import { expect, vi } from "vitest";
 import { CONTEXT_MENUS_PARENT_ID, createContextMenus } from "@/background/background";
-import ExtensionOptions from "@/models/extension-options";
-import Server from "@/models/server";
+import { ExtensionOptions } from "@/models/extension-options";
+import { Server } from "@/models/server";
 
 describe("Context Menus", () => {
   beforeEach(() => {
@@ -10,8 +10,10 @@ describe("Context Menus", () => {
   });
 
   it("should create a single server menu if only one server exists", async () => {
-    const extensionOptions = new ExtensionOptions({
-      server1: new Server(),
+    const extensionOptions = ExtensionOptions.create({
+      servers: {
+        server1: Server.create(),
+      },
     });
 
     await createContextMenus(extensionOptions);
@@ -26,9 +28,11 @@ describe("Context Menus", () => {
   });
 
   it("should create parent and child menus if multiple servers exist", async () => {
-    const extensionOptions = new ExtensionOptions({
-      server1: new Server("1", "Server 1"),
-      server2: new Server("2", "Server 2"),
+    const extensionOptions = ExtensionOptions.create({
+      servers: {
+        server1: Server.create({ uuid: "1", name: "Server 1" }),
+        server2: Server.create({ uuid: "2", name: "Server 2" }),
+      },
     });
 
     await createContextMenus(extensionOptions);
@@ -55,7 +59,7 @@ describe("Context Menus", () => {
   });
 
   it("should not create any menus if no servers exist", async () => {
-    const extensionOptions = new ExtensionOptions();
+    const extensionOptions = ExtensionOptions.create();
 
     await createContextMenus(extensionOptions);
 

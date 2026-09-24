@@ -1,7 +1,8 @@
 import { useEffect, useId, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
 import { useExtensionOptions } from "@/extension-options-provider";
-import ExtensionOptions from "@/models/extension-options";
+import i18n from "@/i18n";
+import { ExtensionOptions } from "@/models/extension-options";
 import Theme from "@/models/theme";
 import AlertProps from "@/options/models/alert-props";
 
@@ -41,18 +42,20 @@ function ExtensionOptionsTab() {
 
   const onClickSaveExtensionOptions = async () => {
     try {
-      const newExtensionOptions = await new ExtensionOptions(
-        extensionOptions.servers,
-        serializeExcludedOption(excludedProtocols),
-        serializeExcludedOption(excludedSites),
-        serializeExcludedOption(excludedFileTypes),
-        useCompleteFilePath,
-        theme,
-      ).toStorage();
+      const newExtensionOptions = await ExtensionOptions.toStorage(
+        ExtensionOptions.withOverrides(extensionOptions, {
+          excludedProtocols: serializeExcludedOption(excludedProtocols),
+          excludedSites: serializeExcludedOption(excludedSites),
+          excludedFileTypes: serializeExcludedOption(excludedFileTypes),
+          useCompleteFilePath,
+          theme,
+        }),
+      );
       setExtensionOptions(newExtensionOptions);
-      setAlertProps(AlertProps.success(browser.i18n.getMessage("serverOptionsSuccess")));
-    } catch {
-      setAlertProps(AlertProps.error(browser.i18n.getMessage("serverOptionsError")));
+      setAlertProps(AlertProps.success(i18n("serverOptionsSuccess")));
+    } catch (error) {
+      console.error(error);
+      setAlertProps(AlertProps.error(i18n("serverOptionsError")));
     }
   };
 
@@ -68,11 +71,11 @@ function ExtensionOptionsTab() {
 
       <Col xs={12} sm={12} className="mb-3">
         <Form.Group controlId="form-theme">
-          <Form.Label>{browser.i18n.getMessage("extensionOptionsTheme")}</Form.Label>
+          <Form.Label>{i18n("extensionOptionsTheme")}</Form.Label>
           <Form.Group controlId="form-group-theme">
             <Form.Check
               inline
-              label={browser.i18n.getMessage("extensionOptionsThemeLight")}
+              label={i18n("extensionOptionsThemeLight")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -82,7 +85,7 @@ function ExtensionOptionsTab() {
             />
             <Form.Check
               inline
-              label={browser.i18n.getMessage("extensionOptionsThemeDark")}
+              label={i18n("extensionOptionsThemeDark")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -92,7 +95,7 @@ function ExtensionOptionsTab() {
             />
             <Form.Check
               inline
-              label={browser.i18n.getMessage("extensionOptionsThemeAuto")}
+              label={i18n("extensionOptionsThemeAuto")}
               name="group-theme"
               type="radio"
               id={useId()}
@@ -106,7 +109,7 @@ function ExtensionOptionsTab() {
 
       <Col xs={12} sm={12} className="mb-3">
         <Button variant="primary" onClick={onClickSaveExtensionOptions}>
-          {browser.i18n.getMessage("serverOptionsSave")}
+          {i18n("serverOptionsSave")}
         </Button>
       </Col>
     </Form>
