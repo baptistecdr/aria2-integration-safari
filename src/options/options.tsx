@@ -4,6 +4,7 @@ import "bootstrap";
 import React, { useId, useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import { ExtensionOptionsProvider, useExtensionOptions } from "@/extension-options-provider";
+import i18n from "@/i18n";
 import { ExtensionOptions } from "@/models/extension-options";
 import { Server } from "@/models/server";
 import ExtensionOptionsTab from "@/options/components/extension-options-tab";
@@ -55,7 +56,7 @@ function Options() {
     <Tabs id={tabsId} defaultActiveKey={EXTENSION_OPTIONS_TAB} activeKey={activeTab} onSelect={handleTabSelect}>
       {renderServerTabs()}
       <Tab eventKey={ADD_SERVER_TAB} title="+" />
-      <Tab eventKey={EXTENSION_OPTIONS_TAB} title={browser.i18n.getMessage("extensionOptionsTitle")}>
+      <Tab eventKey={EXTENSION_OPTIONS_TAB} title={i18n("extensionOptionsTitle")}>
         <ExtensionOptionsTab />
       </Tab>
     </Tabs>

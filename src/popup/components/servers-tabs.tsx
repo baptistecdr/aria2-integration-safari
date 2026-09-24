@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { useExtensionOptions } from "@/extension-options-provider";
+import i18n from "@/i18n";
 import ServerTab from "@/popup/components/server-tab";
 
 function ServersTabs() {
@@ -16,8 +17,8 @@ function ServersTabs() {
   if (Object.keys(extensionOptions.servers).length === 0) {
     return (
       <div className="text-center">
-        {browser.i18n.getMessage("popupNoServerFound1")} <br />
-        {browser.i18n.getMessage("popupNoServerFound2")}
+        {i18n("popupNoServerFound1")} <br />
+        {i18n("popupNoServerFound2")}
       </div>
     );
   }

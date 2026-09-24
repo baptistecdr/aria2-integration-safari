@@ -3,6 +3,7 @@ import { filesize } from "filesize";
 import { Duration } from "luxon";
 import { useId } from "react";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import i18n from "@/i18n";
 import type { Server } from "@/models/server";
 import ServerTaskManagement from "@/popup/components/server-task-management";
 import type { Task } from "@/popup/models/task";
@@ -42,7 +43,7 @@ function ServerTask({ server, aria2, task }: Props) {
   };
 
   const capitalizedStatus = task.status.charAt(0).toUpperCase() + task.status.slice(1);
-  const status = browser.i18n.getMessage(`taskStatus${capitalizedStatus}`);
+  const status = i18n(`taskStatus${capitalizedStatus}`);
 
   const eta = task.downloadSpeed !== 0 ? formatETA((task.totalLength - task.completedLength) / task.downloadSpeed) : "∞";
 
@@ -71,7 +72,7 @@ function ServerTask({ server, aria2, task }: Props) {
           </Col>
           {task.isActive() && (
             <Col xs={12} sm={12} className="align-self-start ps-4 text-start">
-              {task.connections} {browser.i18n.getMessage("taskConnections")}, <i className="bi-arrow-down" /> {filesize(task.downloadSpeed, FILESIZE_BASE)}/s -{" "}
+              {task.connections} {i18n("taskConnections")}, <i className="bi-arrow-down" /> {filesize(task.downloadSpeed, FILESIZE_BASE)}/s -{" "}
               <i className="bi-arrow-up" /> {filesize(task.uploadSpeed, FILESIZE_BASE)}/s
             </Col>
           )}

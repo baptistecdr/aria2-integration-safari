@@ -9,6 +9,7 @@ import { Task } from "@/popup/models/task";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import "./server-tab.css";
+import i18n from "@/i18n";
 import { LoadingSpinner } from "@/popup/components/loading-spinner";
 import { defaultGlobalStat, type GlobalStat, parseGlobalStat } from "@/popup/models/global-stat";
 
@@ -37,7 +38,7 @@ function ServerTab({ server }: Props) {
   const [globalStat, setGlobalStat] = useState(defaultGlobalStat());
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showAddTask, setShowAddTask] = useState(false);
-  const [defaultMessage, setDefaultMessage] = useState(browser.i18n.getMessage("serverNoTasks"));
+  const [defaultMessage, setDefaultMessage] = useState(i18n("serverNoTasks"));
 
   const onClickPurge = () => {
     aria2.call("aria2.purgeDownloadResult");
@@ -55,7 +56,7 @@ function ServerTab({ server }: Props) {
       setTasks(fetchedTasks);
     } catch (error) {
       console.error(error);
-      setDefaultMessage(browser.i18n.getMessage("serverError"));
+      setDefaultMessage(i18n("serverError"));
     }
     setLoading(false);
   }, [aria2]);
@@ -83,10 +84,10 @@ function ServerTab({ server }: Props) {
         </Col>
         <Col xs={6} sm={6} className="align-self-baseline text-end">
           <Button variant="primary" size="sm" className="btn-left" onClick={toggleAddTask}>
-            {showAddTask ? browser.i18n.getMessage("serverCancel") : browser.i18n.getMessage("serverAdd")}
+            {showAddTask ? i18n("serverCancel") : i18n("serverAdd")}
           </Button>
           <Button variant="danger" size="sm" className="btn-right" onClick={onClickPurge}>
-            {browser.i18n.getMessage("serverPurge")}
+            {i18n("serverPurge")}
           </Button>
         </Col>
         <Col xs={12} sm={12}>

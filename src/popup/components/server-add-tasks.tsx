@@ -3,6 +3,7 @@ import { type SubmitEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { captureTorrentFromFile, captureURL } from "@/aria2-extension";
 import { useCurrentTab } from "@/current-tab-provider";
+import i18n from "@/i18n";
 import type { Server } from "@/models/server";
 
 interface Props {
@@ -42,17 +43,17 @@ function ServerAddTasks({ aria2, server }: Props) {
       <Col xs={12} sm={12} className="mb-3">
         <Form onSubmit={formAddUrlsOnSubmit}>
           <Form.Group controlId="form-add-urls">
-            <Form.Label>{browser.i18n.getMessage("addTaskAddUrls")}</Form.Label>
+            <Form.Label>{i18n("addTaskAddUrls")}</Form.Label>
             <InputGroup>
               <Form.Control
                 as="textarea"
                 rows={5}
-                placeholder={browser.i18n.getMessage("addTaskAddUrlsPlaceholder")}
+                placeholder={i18n("addTaskAddUrlsPlaceholder")}
                 value={formUrls.join("\n")}
                 onChange={(e) => setFormUrls(e.target.value.split("\n"))}
               />
               <Button type="submit" variant="primary" size="sm">
-                {browser.i18n.getMessage("addTaskAdd")}
+                {i18n("addTaskAdd")}
               </Button>
             </InputGroup>
           </Form.Group>
@@ -61,7 +62,7 @@ function ServerAddTasks({ aria2, server }: Props) {
       <Col xs={12} sm={12} className="mb-3">
         <Form onSubmit={formAddFilesOnSubmit}>
           <Form.Group controlId="form-add-files">
-            <Form.Label>{browser.i18n.getMessage("addTaskAddFiles")}</Form.Label>
+            <Form.Label>{i18n("addTaskAddFiles")}</Form.Label>
             <InputGroup>
               <Form.Control
                 type="file"
@@ -71,7 +72,7 @@ function ServerAddTasks({ aria2, server }: Props) {
                 multiple
               />
               <Button type="submit" variant="primary" size="sm">
-                {browser.i18n.getMessage("addTaskAdd")}
+                {i18n("addTaskAdd")}
               </Button>
             </InputGroup>
           </Form.Group>
