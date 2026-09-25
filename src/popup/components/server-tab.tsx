@@ -62,10 +62,21 @@ function ServerTab({ server }: Props) {
   }, [aria2]);
 
   useEffect(() => {
-    updateTasks();
-    const intervalId = window.setInterval(updateTasks, POLL_INTERVAL_MS);
+    let cancelled = false;
+    let timeoutId: number | undefined;
+
+    const poll = async () => {
+      await updateTasks();
+      if (!cancelled) {
+        timeoutId = window.setTimeout(poll, POLL_INTERVAL_MS);
+      }
+    };
+
+    poll();
+
     return () => {
-      clearInterval(intervalId);
+      cancelled = true;
+      clearTimeout(timeoutId);
     };
   }, [updateTasks]);
 
