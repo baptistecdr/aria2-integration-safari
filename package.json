@@ -17,7 +17,7 @@
     "@stdlib/regexp-basename-posix": "0.2.3",
     "@stdlib/regexp-basename-windows": "0.2.4",
     "bootstrap": "5.3.8",
-    "bootstrap-icons": "1.13.1",
+    "bootstrap-icons": "1.13.2",
     "filesize": "11.0.25",
     "luxon": "3.7.2",
     "react": "19.3.0",
