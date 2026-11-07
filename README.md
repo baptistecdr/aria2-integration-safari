@@ -15,7 +15,7 @@
 
 ## Quick start
 
-* [App Store](https://apps.apple.com/fr/app/aria2-integration/id6476014369)
+- [App Store](https://apps.apple.com/fr/app/aria2-integration/id6476014369)
 
 ## How to build
 
@@ -27,7 +27,6 @@
 - Modify Signing settings
 - Click on Run (macOS or iOS)
 
-
 ## Development
 
 - Run `npm run lint:fix` to lint and fix files
@@ -38,7 +37,7 @@
 
 ### Internationalization
 
-* The extension speaks English, French, and Chinese. You can add your language
+- The extension speaks English, French, and Chinese. You can add your language
   in [public/_locales](https://github.com/baptistecdr/aria2-integration-safari/tree/main/public/_locales).
   You can find your language
   code [here](https://src.chromium.org/viewvc/chrome/trunk/src/third_party/cld/languages/internal/languages.cc#l23).
@@ -50,7 +49,7 @@ addressed yet, [please open a new issue](https://github.com/baptistecdr/aria2-in
 
 ## Contributing
 
-* Contributions are welcome!
+- Contributions are welcome!
 
 ## Thanks to
 

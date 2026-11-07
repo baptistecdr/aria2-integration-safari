@@ -37,6 +37,30 @@ const TestSetter = () => {
   );
 };
 
+const Consumer1 = () => {
+  const { extensionOptions } = useExtensionOptions();
+  return <span data-testid="consumer-1">{extensionOptions.excludedProtocols}</span>;
+};
+
+const Consumer2 = () => {
+  const { extensionOptions } = useExtensionOptions();
+  return <span data-testid="consumer-2">{extensionOptions.excludedProtocols}</span>;
+};
+
+const ThemeOutsideProvider = () => {
+  const { extensionOptions } = useExtensionOptions();
+  return <span data-testid="theme">{extensionOptions.theme}</span>;
+};
+
+const SetterOutsideProvider = () => {
+  const { setExtensionOptions } = useExtensionOptions();
+  return (
+    <button type="button" onClick={() => setExtensionOptions(ExtensionOptions.create())}>
+      Set
+    </button>
+  );
+};
+
 describe("extension-options-provider", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -186,15 +210,6 @@ describe("extension-options-provider", () => {
         options: ExtensionOptions.serialize(storedOptions),
       });
 
-      const Consumer1 = () => {
-        const { extensionOptions } = useExtensionOptions();
-        return <span data-testid="consumer-1">{extensionOptions.excludedProtocols}</span>;
-      };
-      const Consumer2 = () => {
-        const { extensionOptions } = useExtensionOptions();
-        return <span data-testid="consumer-2">{extensionOptions.excludedProtocols}</span>;
-      };
-
       render(
         <ExtensionOptionsProvider>
           <Consumer1 />
@@ -211,27 +226,13 @@ describe("extension-options-provider", () => {
 
   describe("useExtensionOptions", () => {
     it("should return default ExtensionOptions when used outside provider", () => {
-      const TestOutsideProvider = () => {
-        const { extensionOptions } = useExtensionOptions();
-        return <span data-testid="theme">{extensionOptions.theme}</span>;
-      };
-
-      render(<TestOutsideProvider />);
+      render(<ThemeOutsideProvider />);
 
       expect(screen.getByTestId("theme")).toHaveTextContent(Theme.Auto);
     });
 
     it("should return a no-op setExtensionOptions when used outside provider", () => {
-      const TestOutsideProvider = () => {
-        const { setExtensionOptions } = useExtensionOptions();
-        return (
-          <button type="button" onClick={() => setExtensionOptions(ExtensionOptions.create())}>
-            Set
-          </button>
-        );
-      };
-
-      render(<TestOutsideProvider />);
+      render(<SetterOutsideProvider />);
 
       // Should not throw
       expect(() => screen.getByRole("button", { name: "Set" }).click()).not.toThrow();

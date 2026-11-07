@@ -2,6 +2,47 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CurrentTabProvider, findCurrentTab, useCurrentTab } from "@/current-tab-provider";
 
+const TabPresence = () => {
+  const currentTab = useCurrentTab();
+  return <div>{currentTab ? "Tab found" : "No tab"}</div>;
+};
+
+const TabUrl = () => {
+  const currentTab = useCurrentTab();
+  return <div>{currentTab?.url || "No tab"}</div>;
+};
+
+const TabDetails = () => {
+  const currentTab = useCurrentTab();
+  return (
+    <div>
+      {currentTab ? (
+        <>
+          <div>{currentTab.url}</div>
+          <div>{currentTab.title}</div>
+        </>
+      ) : (
+        "No tab"
+      )}
+    </div>
+  );
+};
+
+const TabIncognito = () => {
+  const currentTab = useCurrentTab();
+  return <div>{currentTab?.incognito ? "Incognito" : "Normal"}</div>;
+};
+
+const Consumer1 = () => {
+  const currentTab = useCurrentTab();
+  return <div data-testid="consumer-1">{currentTab?.url || "No tab"}</div>;
+};
+
+const Consumer2 = () => {
+  const currentTab = useCurrentTab();
+  return <div data-testid="consumer-2">{currentTab?.id || "No id"}</div>;
+};
+
 describe("current-tab-provider", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -62,16 +103,11 @@ describe("current-tab-provider", () => {
 
   describe("CurrentTabProvider", () => {
     it("should provide undefined tab initially", () => {
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return <div>{currentTab ? "Tab found" : "No tab"}</div>;
-      };
-
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([]);
 
       render(
         <CurrentTabProvider>
-          <TestComponent />
+          <TabPresence />
         </CurrentTabProvider>,
       );
 
@@ -88,14 +124,9 @@ describe("current-tab-provider", () => {
 
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([mockTab] as any);
 
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return <div>{currentTab?.url || "No tab"}</div>;
-      };
-
       render(
         <CurrentTabProvider>
-          <TestComponent />
+          <TabUrl />
         </CurrentTabProvider>,
       );
 
@@ -108,14 +139,9 @@ describe("current-tab-provider", () => {
     it("should handle case when no tabs are available", async () => {
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([]);
 
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return <div>{currentTab ? "Tab found" : "No tab"}</div>;
-      };
-
       render(
         <CurrentTabProvider>
-          <TestComponent />
+          <TabPresence />
         </CurrentTabProvider>,
       );
 
@@ -128,12 +154,7 @@ describe("current-tab-provider", () => {
 
   describe("useCurrentTab", () => {
     it("should return undefined when used outside CurrentTabProvider", () => {
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return <div>{currentTab ? "Tab found" : "No tab"}</div>;
-      };
-
-      render(<TestComponent />);
+      render(<TabPresence />);
 
       expect(screen.getByText("No tab")).toBeInTheDocument();
     });
@@ -152,25 +173,9 @@ describe("current-tab-provider", () => {
 
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([mockTab] as any);
 
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return (
-          <div>
-            {currentTab ? (
-              <>
-                <div>{currentTab.url}</div>
-                <div>{currentTab.title}</div>
-              </>
-            ) : (
-              "No tab"
-            )}
-          </div>
-        );
-      };
-
       render(
         <CurrentTabProvider>
-          <TestComponent />
+          <TabDetails />
         </CurrentTabProvider>,
       );
 
@@ -188,16 +193,6 @@ describe("current-tab-provider", () => {
       };
 
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([mockTab] as any);
-
-      const Consumer1 = () => {
-        const currentTab = useCurrentTab();
-        return <div data-testid="consumer-1">{currentTab?.url || "No tab"}</div>;
-      };
-
-      const Consumer2 = () => {
-        const currentTab = useCurrentTab();
-        return <div data-testid="consumer-2">{currentTab?.id || "No id"}</div>;
-      };
 
       render(
         <CurrentTabProvider>
@@ -222,14 +217,9 @@ describe("current-tab-provider", () => {
 
       vi.mocked(browser.tabs.query).mockResolvedValueOnce([mockTab] as any);
 
-      const TestComponent = () => {
-        const currentTab = useCurrentTab();
-        return <div>{currentTab?.incognito ? "Incognito" : "Normal"}</div>;
-      };
-
       render(
         <CurrentTabProvider>
-          <TestComponent />
+          <TabIncognito />
         </CurrentTabProvider>,
       );
 
