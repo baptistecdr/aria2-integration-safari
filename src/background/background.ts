@@ -62,9 +62,26 @@ export async function createContextMenus(extensionOptions: ExtensionOptions) {
   }
 }
 
+// Safari ignores the application identifier and routes the message to the containing app's extension handler.
+const NATIVE_APPLICATION_ID = "eu.bcosp.aria2-integration";
+export const NATIVE_MESSAGE_SYNC_OPTIONS = "syncOptions";
+
+// Shares the servers with the native app (e.g. the iOS Share Extension) through the App Group.
+export async function syncOptionsToNativeApp(extensionOptions: ExtensionOptions) {
+  try {
+    await browser.runtime.sendNativeMessage(NATIVE_APPLICATION_ID, {
+      type: NATIVE_MESSAGE_SYNC_OPTIONS,
+      options: ExtensionOptions.serialize(extensionOptions),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 ExtensionOptions.fromStorage().then(async (extensionOptions) => {
   connections = createConnections(extensionOptions);
   await createContextMenus(extensionOptions);
+  await syncOptionsToNativeApp(extensionOptions);
 });
 
 browser.runtime.onInstalled.addListener(async (details) => {
@@ -78,6 +95,7 @@ browser.storage.onChanged.addListener(async (changes) => {
     const extensionOptions = await ExtensionOptions.fromStorage();
     connections = createConnections(extensionOptions);
     await createContextMenus(extensionOptions);
+    await syncOptionsToNativeApp(extensionOptions);
   }
 });
 

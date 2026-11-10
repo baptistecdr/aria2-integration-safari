@@ -7,7 +7,7 @@
   "version": "1.4.1",
   "version_name": "1.4.1 (8b9cdf3)",
   "default_locale": "en",
-  "permissions": ["activeTab", "alarms", "contextMenus", "cookies", "storage"],
+  "permissions": ["activeTab", "alarms", "contextMenus", "cookies", "nativeMessaging", "storage"],
   "host_permissions": ["*://*/*"],
   "background": {
     "service_worker": "js/background.js",
