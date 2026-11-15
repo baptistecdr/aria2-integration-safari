@@ -6,8 +6,10 @@ import Aria2IntegrationCore
 /// Answers requests from canned responses registered per host, so suites can run in parallel.
 final class StubURLProtocol: URLProtocol {
     enum Response {
-        case json(String)
+        case http(status: Int, body: String)
         case failure(URLError.Code)
+
+        static func json(_ json: String) -> Response { .http(status: 200, body: json) }
     }
 
     private static let lock = NSLock()
@@ -41,10 +43,10 @@ final class StubURLProtocol: URLProtocol {
         }
 
         switch response {
-        case let .json(json):
-            let http = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
+        case let .http(status, body):
+            let http = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"])!
             client?.urlProtocol(self, didReceive: http, cacheStoragePolicy: .notAllowed)
-            client?.urlProtocol(self, didLoad: Data(json.utf8))
+            client?.urlProtocol(self, didLoad: Data(body.utf8))
             client?.urlProtocolDidFinishLoading(self)
         case let .failure(code):
             client?.urlProtocol(self, didFailWithError: URLError(code))
@@ -161,6 +163,65 @@ struct Aria2ClientTests {
 
         #expect(error?.code == .cannotConnectToHost)
         #expect(error?.localizedDescription.contains("URLSessionTask") == false)
+    }
+
+    @Test("Throws the aria2 error even when it comes with an HTTP 400 status, as aria2 sends it")
+    func throwsRPCErrorWithBadRequestStatus() async {
+        let server = server(secret: "wrong")
+        StubURLProtocol.register(.http(status: 400, body: #"{"jsonrpc":"2.0","id":"1","error":{"code":1,"message":"Unauthorized"}}"#), for: server.host)
+
+        await #expect(throws: Aria2RPCError(code: 1, message: "Unauthorized")) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
+    }
+
+    @Test("Throws the HTTP status when the server does not answer with a JSON-RPC body")
+    func throwsHTTPStatus() async {
+        let server = server(path: "/wrong")
+        StubURLProtocol.register(.http(status: 404, body: "<html>Not Found</html>"), for: server.host)
+
+        await #expect(throws: Aria2ServerError.httpStatus(404)) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
+    }
+
+    @Test("Throws when a 200 response is not a JSON-RPC result", arguments: ["<html>Welcome</html>", #"{"status":"ok"}"#])
+    func throwsUnexpectedResponse(body: String) async {
+        let server = server()
+        StubURLProtocol.register(.json(body), for: server.host)
+
+        await #expect(throws: Aria2ServerError.unexpectedResponse) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
+    }
+
+    @Test("Rejects a port outside 1...65535 without sending anything", arguments: [0, -1, 68000])
+    func rejectsInvalidPort(port: Int) async {
+        let server = server(port: port)
+
+        await #expect(throws: Aria2ServerError.invalidPort(port)) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
+        #expect(StubURLProtocol.requests(for: server.host).isEmpty)
+    }
+
+    @Test("Rejects a host that cannot form a URL instead of crashing", arguments: ["fe80::1", "nas local", "http://nas.local"])
+    func rejectsInvalidHost(host: String) async {
+        let server = Aria2Server(host: host)
+
+        await #expect(throws: Aria2ServerError.invalidAddress) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
+    }
+
+    @Test("Accepts IP addresses and host names", arguments: ["[::1]", "192.168.1.10", "NAS.local"])
+    func acceptsValidHost(host: String) async {
+        let server = Aria2Server(host: host)
+
+        // Nothing answers in the stub, so only the address check is under test here.
+        await #expect(throws: URLError.self) {
+            try await server.addUri("https://example.com/file.mkv", configuration: StubURLProtocol.configuration())
+        }
     }
 
     @Test("Describes aria2 errors for the user")

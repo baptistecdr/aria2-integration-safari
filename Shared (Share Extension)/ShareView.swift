@@ -38,8 +38,16 @@ final class ShareModel: ObservableObject {
         state = payload == nil ? .unsupported : .ready
     }
 
+    /// Only from `.ready` or `.failed`, so a double tap queued before `.sending` is published adds nothing twice.
+    var canSend: Bool {
+        switch state {
+        case .ready, .failed: payload != nil && servers.contains { $0.id == selectedServerID }
+        default: false
+        }
+    }
+
     func send() async {
-        guard let payload, let server = servers.first(where: { $0.id == selectedServerID }) else { return }
+        guard canSend, let payload, let server = servers.first(where: { $0.id == selectedServerID }) else { return }
         state = .sending
         do {
             switch payload {
@@ -101,14 +109,7 @@ struct ShareView: View {
 
     private var sendButton: some View {
         Button("Send") { Task { await model.send() } }
-            .disabled(!canSend)
-    }
-
-    private var canSend: Bool {
-        switch model.state {
-        case .ready, .failed: model.selectedServerID != nil
-        default: false
-        }
+            .disabled(!model.canSend)
     }
 
     @ViewBuilder
