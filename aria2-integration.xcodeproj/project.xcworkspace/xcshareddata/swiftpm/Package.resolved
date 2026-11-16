@@ -1,0 +1,24 @@
+{
+  "originHash" : "e4ca26bbea3d9ca2c68d6b52d6fd18e21749c5f86c0591f8fd068af304f9c916",
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "7595cbcf59809f9977c5f6378500de2ad73b7ddb",
+        "version" : "5.12.0"
+      }
+    },
+    {
+      "identity" : "aria2kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/baptistecdr/Aria2Kit",
+      "state" : {
+        "revision" : "f7665b7a8d27c41a6f54af64a5a43858e7a38e4c",
+        "version" : "1.0.7"
+      }
+    }
+  ],
+  "version" : 3
+}
