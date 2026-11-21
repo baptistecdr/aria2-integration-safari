@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       sourcemap: isDev,
       rolldownOptions: {
         input: {
-          background: r("src", "background", "background.ts"),
+          background: r("src", "background", "index.ts"),
           options: r("src", "options", "options.html"),
           popup: r("src", "popup", "popup.html"),
         },
