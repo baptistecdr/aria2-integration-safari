@@ -1,22 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useExtensionOptions } from "@/extension-options-provider";
-import { ExtensionOptions } from "@/models/extension-options";
-import { Server } from "@/models/server";
-import { ServerIncognitoModeOptions } from "@/models/server-incognito-mode-options";
+import { ExtensionOptions } from "@/domain/extension-options";
+import { Server } from "@/domain/server";
+import { ServerIncognitoModeOptions } from "@/domain/server-incognito-mode-options";
 import ServerOptionsTab from "@/options/components/server-options-tab";
+import { useExtensionOptions } from "@/shared/ui/extension-options-provider";
 
-vi.mock("@/extension-options-provider", () => ({
-  useExtensionOptions: vi.fn(),
-  setExtensionOptions: vi.fn(),
+vi.mock("@/platform/i18n", () => ({
+  default: (key: string) => key,
 }));
 
-const addServerSpy = vi.spyOn(ExtensionOptions, "addServer");
+vi.mock("@/shared/ui/extension-options-provider", () => ({
+  useExtensionOptions: vi.fn(),
+}));
+
+const addServerSpy = vi.spyOn(ExtensionOptions, "withServer");
 
 describe("ServerOptionsTab", () => {
   const extensionOptions = ExtensionOptions.create();
-  const setExtensionOptions = vi.fn();
+  const updateExtensionOptions = vi.fn();
   const server = Server.create({
     uuid: "test-uuid",
     name: "Test Server",
@@ -26,18 +29,18 @@ describe("ServerOptionsTab", () => {
     path: "/jsonrpc",
     secret: "secret123",
     rpcParameters: { split: "5" },
-    incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: true, rpcParameters: { split: "6" } }),
+    incognitoModeOptions: ServerIncognitoModeOptions.create({ automaticallyPurgeDownloads: true, overwriteRpcParameters: true, rpcParameters: { split: "6" } }),
   });
   const deleteServer = vi.fn().mockResolvedValue(undefined);
 
   beforeEach(() => {
     vi.clearAllMocks();
-    addServerSpy.mockResolvedValue(extensionOptions);
+    updateExtensionOptions.mockImplementation(async (updater) => updater(extensionOptions));
 
     vi.mocked(useExtensionOptions).mockReturnValue({
       extensionOptions,
-      setExtensionOptions,
-    } as any);
+      updateExtensionOptions,
+    });
   });
 
   it("renders with server data", async () => {
@@ -46,11 +49,12 @@ describe("ServerOptionsTab", () => {
     expect(screen.getByLabelText("serverOptionsName")).toHaveValue("Test Server");
     expect(screen.getByLabelText("serverOptionsHost")).toHaveValue("localhost");
     expect(screen.getByLabelText("serverOptionsPort")).toHaveValue(6800);
-    expect(screen.getByLabelText("serverOptionsPath")).toHaveValue("/jsonrpc");
     expect(screen.getByLabelText("serverOptionsSecureConnection")).toBeChecked();
+    expect(screen.getByLabelText("serverOptionsPath")).toHaveValue("/jsonrpc");
     expect(screen.getByLabelText("serverOptionsUrl")).toHaveValue("https://localhost:6800/jsonrpc");
     expect(screen.getByLabelText("serverOptionsSecret")).toHaveValue("secret123");
     const serverOptionsRpcParameters = await screen.findAllByLabelText("serverOptionsRpcParameters");
+    expect(screen.getByLabelText("serverOptionsAutomaticallyPurgeDownloads")).toBeChecked();
     expect(screen.getByLabelText("serverOptionsOverwriteRpcParameters")).toBeChecked();
     expect(serverOptionsRpcParameters).toHaveLength(2);
     expect(serverOptionsRpcParameters[0]).toHaveValue("split: 5");
@@ -70,7 +74,7 @@ describe("ServerOptionsTab", () => {
     expect(passwordInput).toHaveAttribute("type", "password");
   });
 
-  it("calls addServer when form is submitted with valid data", async () => {
+  it("saves the server when form is submitted with valid data", async () => {
     render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
 
     await userEvent.clear(screen.getByLabelText("serverOptionsName"));
@@ -100,13 +104,13 @@ describe("ServerOptionsTab", () => {
         name: "Updated Server",
         host: "127.0.0.1",
         port: 443,
-        path: "/rpc",
         secure: false,
+        path: "/rpc",
         secret: "123secret",
       }),
     );
 
-    expect(setExtensionOptions).toHaveBeenCalled();
+    expect(updateExtensionOptions).toHaveBeenCalled();
   });
 
   it("formats path with a leading slash when it is missing", async () => {
@@ -157,28 +161,6 @@ describe("ServerOptionsTab", () => {
     expect(deleteServer).toHaveBeenCalledWith(server);
   });
 
-  it("trims whitespace around RPC parameter names", async () => {
-    render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
-
-    const serverOptionsRpcParameters = await screen.findAllByLabelText("serverOptionsRpcParameters");
-
-    await userEvent.clear(serverOptionsRpcParameters[0]);
-    await userEvent.type(serverOptionsRpcParameters[0], "split: 5\n  proxy: http://localhost:8080");
-
-    const saveButton = screen.getByText("serverOptionsSave");
-    await userEvent.click(saveButton);
-
-    expect(addServerSpy).toHaveBeenCalledWith(
-      extensionOptions,
-      expect.objectContaining({
-        rpcParameters: {
-          split: "5",
-          proxy: "http://localhost:8080",
-        },
-      }),
-    );
-  });
-
   it("serializes and deserializes RPC parameters correctly", async () => {
     render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
 
@@ -205,6 +187,7 @@ describe("ServerOptionsTab", () => {
           proxy: "http://localhost:8080",
         },
         incognitoModeOptions: ServerIncognitoModeOptions.create({
+          automaticallyPurgeDownloads: true,
           overwriteRpcParameters: true,
           rpcParameters: {
             split: "6",
@@ -215,8 +198,32 @@ describe("ServerOptionsTab", () => {
     );
   });
 
+  it("trims leading and trailing whitespace from RPC parameter names", async () => {
+    render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
+
+    const serverOptionsRpcParameters = await screen.findAllByLabelText("serverOptionsRpcParameters");
+
+    await userEvent.clear(serverOptionsRpcParameters[0]);
+    // The leading spaces before "split" must not be on the first line: serializeRpcParameters trims
+    // the whole textarea value, which would otherwise strip them and hide the bug this test guards against.
+    await userEvent.type(serverOptionsRpcParameters[0], "proxy: http://localhost:8080\n  split : 5");
+
+    const saveButton = screen.getByText("serverOptionsSave");
+    await userEvent.click(saveButton);
+
+    expect(addServerSpy).toHaveBeenCalledWith(
+      extensionOptions,
+      expect.objectContaining({
+        rpcParameters: {
+          proxy: "http://localhost:8080",
+          split: "5",
+        },
+      }),
+    );
+  });
+
   it("shows error alert when server save fails", async () => {
-    addServerSpy.mockRejectedValueOnce(new Error("Save failed"));
+    updateExtensionOptions.mockRejectedValueOnce(new Error("Save failed"));
 
     render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
 
@@ -224,7 +231,7 @@ describe("ServerOptionsTab", () => {
     await userEvent.click(saveButton);
 
     expect(screen.getByText("serverOptionsError")).toBeInTheDocument();
-    expect(setExtensionOptions).not.toHaveBeenCalled();
+    expect(screen.queryByText("serverOptionsSuccess")).not.toBeInTheDocument();
   });
 
   it("shows empty URL when server host is empty", async () => {
@@ -245,7 +252,10 @@ describe("ServerOptionsTab", () => {
       path: "/jsonrpc",
       secret: "secret123",
       rpcParameters: { split: "5" },
-      incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: true, rpcParameters: { split: "6" } }),
+      incognitoModeOptions: ServerIncognitoModeOptions.create({
+        overwriteRpcParameters: true,
+        rpcParameters: { split: "6" },
+      }),
     });
 
     render(<ServerOptionsTab server={serverWithOverwrite} deleteServer={deleteServer} />);
@@ -268,7 +278,10 @@ describe("ServerOptionsTab", () => {
       path: "/jsonrpc",
       secret: "secret123",
       rpcParameters: { split: "5" },
-      incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: false, rpcParameters: { split: "6" } }),
+      incognitoModeOptions: ServerIncognitoModeOptions.create({
+        overwriteRpcParameters: false,
+        rpcParameters: { split: "6" },
+      }),
     });
 
     render(<ServerOptionsTab server={serverWithoutOverwrite} deleteServer={deleteServer} />);
@@ -331,7 +344,11 @@ describe("ServerOptionsTab", () => {
     expect(addServerSpy).toHaveBeenCalledWith(
       extensionOptions,
       expect.objectContaining({
-        incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: false, rpcParameters: { split: "6" } }),
+        incognitoModeOptions: ServerIncognitoModeOptions.create({
+          automaticallyPurgeDownloads: true,
+          overwriteRpcParameters: false,
+          rpcParameters: { split: "6" },
+        }),
       }),
     );
   });
@@ -364,8 +381,22 @@ describe("ServerOptionsTab", () => {
     expect(addServerSpy).toHaveBeenCalledWith(
       extensionOptions,
       expect.objectContaining({
-        incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: true, rpcParameters: { split: "3" } }),
+        incognitoModeOptions: ServerIncognitoModeOptions.create({
+          overwriteRpcParameters: true,
+          rpcParameters: { split: "3" },
+        }),
       }),
     );
+  });
+
+  it("shows the server again when it changes elsewhere, keeping the confirmation", async () => {
+    const { rerender } = render(<ServerOptionsTab server={server} deleteServer={deleteServer} />);
+    await userEvent.click(screen.getByText("serverOptionsSave"));
+    expect(await screen.findByText("serverOptionsSuccess")).toBeInTheDocument();
+
+    rerender(<ServerOptionsTab server={Server.create({ ...server, name: "Renamed" })} deleteServer={deleteServer} />);
+
+    expect(screen.getByLabelText("serverOptionsName")).toHaveValue("Renamed");
+    expect(screen.getByText("serverOptionsSuccess")).toBeInTheDocument();
   });
 });

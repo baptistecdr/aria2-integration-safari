@@ -1,7 +1,7 @@
 import Aria2IntegrationCore
 import SafariServices
 
-/// Receives `browser.runtime.sendNativeMessage` calls from the web extension (src/background/background.ts).
+/// Receives `browser.runtime.sendNativeMessage` calls from the web extension (src/background/native-sync.ts).
 final class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
     private static let syncOptionsMessageType = "syncOptions"
 

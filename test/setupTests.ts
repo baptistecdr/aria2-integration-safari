@@ -17,6 +17,8 @@ const browser: { [k: string]: any } = {
     },
     id: "test-extension-id",
     getURL: vi.fn((path: string) => `https://example.com/${path}`),
+    sendNativeMessage: vi.fn().mockResolvedValue({ ok: true }),
+    openOptionsPage: vi.fn(),
   },
   storage: {
     local: {
@@ -35,19 +37,6 @@ const browser: { [k: string]: any } = {
       hasListener: vi.fn(),
     },
   },
-  downloads: {
-    download: vi.fn(),
-    onCreated: {
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      hasListener: vi.fn(),
-    },
-    onChanged: {
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      hasListener: vi.fn(),
-    },
-  },
   contextMenus: {
     onClicked: {
       addListener: vi.fn(),
@@ -57,18 +46,14 @@ const browser: { [k: string]: any } = {
     removeAll: vi.fn(),
     create: vi.fn(),
   },
-  commands: {
-    onCommand: {
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      hasListener: vi.fn(),
-    },
-  },
   tabs: {
     query: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     remove: vi.fn(),
+  },
+  cookies: {
+    getAll: vi.fn().mockResolvedValue([]),
   },
   alarms: {
     onAlarm: {
@@ -83,21 +68,12 @@ const browser: { [k: string]: any } = {
     clearAll: vi.fn(),
   },
   i18n: {
-    getMessage: vi.fn((key: string) => key),
+    getMessage: vi.fn((key: string) => `Translated: ${key}`),
     getUILanguage: vi.fn(() => "en"),
   },
   action: {
     setBadgeText: vi.fn(),
     setBadgeBackgroundColor: vi.fn(),
-  },
-  notifications: {
-    create: vi.fn(),
-    clear: vi.fn(),
-    onClicked: {
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      hasListener: vi.fn(),
-    },
   },
 };
 

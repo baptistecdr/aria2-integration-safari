@@ -13,7 +13,7 @@ public enum AppGroup {
     }
 }
 
-/// Mirror of the web extension's `Server` model (src/models/server.ts), including its defaults.
+/// Mirror of the web extension's `Server` model (src/domain/server.ts), including its defaults.
 public struct Aria2Server: Decodable, Identifiable, Hashable {
     public let uuid: String
     public let name: String

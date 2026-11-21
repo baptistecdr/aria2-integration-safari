@@ -1,57 +1,21 @@
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import { Alert, Button, Col, Form } from "react-bootstrap";
-import { useExtensionOptions } from "@/extension-options-provider";
-import i18n from "@/i18n";
-import { ExtensionOptions } from "@/models/extension-options";
-import Theme from "@/models/theme";
-import AlertProps from "@/options/models/alert-props";
-
-function serializeExcludedOption(excludedOptions: string): string[] {
-  return excludedOptions
-    .trim()
-    .split(/\s*,+\s*/)
-    .filter((s) => s !== "");
-}
-
-function deserializeExcludedOption(excludedOption: string[]): string {
-  return excludedOption.join(", ");
-}
+import { ExtensionOptions } from "@/domain/extension-options";
+import Theme from "@/domain/theme";
+import { AlertProps } from "@/options/models/alert-props";
+import { applyExtensionOptionsFormValues, type ExtensionOptionsFormValues, toExtensionOptionsFormValues } from "@/options/models/extension-options-form";
+import i18n from "@/platform/i18n";
+import { useExtensionOptions } from "@/shared/ui/extension-options-provider";
+import { useFormValues } from "@/shared/ui/use-form-values";
 
 function ExtensionOptionsTab() {
-  const { extensionOptions, setExtensionOptions } = useExtensionOptions();
-  const [excludedProtocols, setExcludedProtocols] = useState(deserializeExcludedOption(extensionOptions.excludedProtocols));
-  const [excludedSites, setExcludedSites] = useState(deserializeExcludedOption(extensionOptions.excludedSites));
-  const [excludedFileTypes, setExcludedFileTypes] = useState(deserializeExcludedOption(extensionOptions.excludedFileTypes));
-  const [useCompleteFilePath, setUseCompleteFilePath] = useState(extensionOptions.useCompleteFilePath);
-  const [theme, setTheme] = useState(extensionOptions.theme);
-  const [alertProps, setAlertProps] = useState(new AlertProps());
+  const { extensionOptions, updateExtensionOptions } = useExtensionOptions();
+  // Lives outside the form so that the confirmation stays visible when the saved options restart the form.
+  const [alertProps, setAlertProps] = useState(AlertProps.none());
 
-  useEffect(() => {
-    setExcludedProtocols(deserializeExcludedOption(extensionOptions.excludedProtocols));
-    setExcludedSites(deserializeExcludedOption(extensionOptions.excludedSites));
-    setExcludedFileTypes(deserializeExcludedOption(extensionOptions.excludedFileTypes));
-    setUseCompleteFilePath(extensionOptions.useCompleteFilePath);
-    setTheme(extensionOptions.theme);
-  }, [
-    extensionOptions.excludedFileTypes,
-    extensionOptions.excludedProtocols,
-    extensionOptions.excludedSites,
-    extensionOptions.theme,
-    extensionOptions.useCompleteFilePath,
-  ]);
-
-  const onClickSaveExtensionOptions = async () => {
+  const save = async (values: ExtensionOptionsFormValues) => {
     try {
-      const newExtensionOptions = await ExtensionOptions.toStorage(
-        ExtensionOptions.withOverrides(extensionOptions, {
-          excludedProtocols: serializeExcludedOption(excludedProtocols),
-          excludedSites: serializeExcludedOption(excludedSites),
-          excludedFileTypes: serializeExcludedOption(excludedFileTypes),
-          useCompleteFilePath,
-          theme,
-        }),
-      );
-      setExtensionOptions(newExtensionOptions);
+      await updateExtensionOptions((options) => applyExtensionOptionsFormValues(options, values));
       setAlertProps(AlertProps.success(i18n("serverOptionsSuccess")));
     } catch (error) {
       console.error(error);
@@ -59,11 +23,40 @@ function ExtensionOptionsTab() {
     }
   };
 
+  // The form restarts from the options whenever they change: once loaded, when saved, or when changed elsewhere.
+  return (
+    <ExtensionOptionsForm
+      key={ExtensionOptions.serialize(extensionOptions)}
+      options={extensionOptions}
+      alertProps={alertProps}
+      onCloseAlert={() => setAlertProps(AlertProps.none())}
+      onSave={save}
+    />
+  );
+}
+
+interface ExtensionOptionsFormProps {
+  options: ExtensionOptions;
+  alertProps: AlertProps;
+  onCloseAlert: () => void;
+  onSave: (values: ExtensionOptionsFormValues) => Promise<void>;
+}
+
+function ExtensionOptionsForm({ options, alertProps, onCloseAlert, onSave }: ExtensionOptionsFormProps) {
+  const [values, set] = useFormValues(() => toExtensionOptionsFormValues(options));
+  const themeIds = { light: useId(), dark: useId(), auto: useId() };
+
+  const themes = [
+    { theme: Theme.Light, label: i18n("extensionOptionsThemeLight"), id: themeIds.light },
+    { theme: Theme.Dark, label: i18n("extensionOptionsThemeDark"), id: themeIds.dark },
+    { theme: Theme.Auto, label: i18n("extensionOptionsThemeAuto"), id: themeIds.auto },
+  ];
+
   return (
     <Form className="row p-3">
       {alertProps.show && (
         <Col xs={12} sm={12}>
-          <Alert variant={alertProps.variant} className="mb-3" onClose={() => setAlertProps(new AlertProps())} dismissible>
+          <Alert variant={alertProps.variant} className="mb-3" onClose={onCloseAlert} dismissible>
             {alertProps.message}
           </Alert>
         </Col>
@@ -73,42 +66,25 @@ function ExtensionOptionsTab() {
         <Form.Group controlId="form-theme">
           <Form.Label>{i18n("extensionOptionsTheme")}</Form.Label>
           <Form.Group controlId="form-group-theme">
-            <Form.Check
-              inline
-              label={i18n("extensionOptionsThemeLight")}
-              name="group-theme"
-              type="radio"
-              id={useId()}
-              value={Theme.Light}
-              checked={theme === Theme.Light}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-            />
-            <Form.Check
-              inline
-              label={i18n("extensionOptionsThemeDark")}
-              name="group-theme"
-              type="radio"
-              id={useId()}
-              value={Theme.Dark}
-              checked={theme === Theme.Dark}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-            />
-            <Form.Check
-              inline
-              label={i18n("extensionOptionsThemeAuto")}
-              name="group-theme"
-              type="radio"
-              id={useId()}
-              value={Theme.Auto}
-              checked={theme === Theme.Auto}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-            />
+            {themes.map(({ theme, label, id }) => (
+              <Form.Check
+                key={theme}
+                inline
+                label={label}
+                name="group-theme"
+                type="radio"
+                id={id}
+                value={theme}
+                checked={values.theme === theme}
+                onChange={(e) => set("theme", e.target.value as Theme)}
+              />
+            ))}
           </Form.Group>
         </Form.Group>
       </Col>
 
       <Col xs={12} sm={12} className="mb-3">
-        <Button variant="primary" onClick={onClickSaveExtensionOptions}>
+        <Button variant="primary" onClick={() => onSave(values)}>
           {i18n("serverOptionsSave")}
         </Button>
       </Col>

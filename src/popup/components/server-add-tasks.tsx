@@ -1,13 +1,14 @@
-import type Aria2 from "@baptistecdr/aria2";
 import { type SubmitEvent, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { captureTorrentFromFile, captureURL } from "@/aria2-extension";
-import { useCurrentTab } from "@/current-tab-provider";
-import i18n from "@/i18n";
-import type { Server } from "@/models/server";
+import type { Server } from "@/domain/server";
+import i18n from "@/platform/i18n";
+import type { Aria2Client } from "@/services/aria2-client";
+import { captureTorrentFile, captureUrl } from "@/services/capture";
+import { runLoggingErrors } from "@/services/run-logging-errors";
+import { useCurrentTab } from "@/shared/ui/current-tab-provider";
 
 interface Props {
-  aria2: Aria2;
+  aria2: Aria2Client;
   server: Server;
 }
 
@@ -18,11 +19,12 @@ function ServerAddTasks({ aria2, server }: Props) {
   const [formFiles, setFormFiles] = useState(DEFAULT_FORM_FILES);
   const currentTab = useCurrentTab();
 
+  const incognito = !!currentTab?.incognito;
+
   const formAddUrlsOnSubmit = (formEvent: SubmitEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
-    for (const url of formUrls) {
-      captureURL(aria2, server, url, "", "", !!currentTab?.incognito);
-    }
+    // The form is cleared right away: the errors are logged.
+    void Promise.all(formUrls.map((url) => runLoggingErrors(() => captureUrl(aria2, server, { url, incognito }))));
     formEvent.currentTarget.reset();
     setFormUrls([]);
   };
@@ -30,9 +32,7 @@ function ServerAddTasks({ aria2, server }: Props) {
   const formAddFilesOnSubmit = (formEvent: SubmitEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
     if (formFiles.files !== null) {
-      for (let i = 0; i < formFiles.files.length; i += 1) {
-        captureTorrentFromFile(aria2, server, formFiles.files[i], !!currentTab?.incognito);
-      }
+      void Promise.all(Array.from(formFiles.files, (file) => runLoggingErrors(() => captureTorrentFile(aria2, server, file, incognito))));
       formEvent.currentTarget.reset();
       setFormFiles(DEFAULT_FORM_FILES);
     }

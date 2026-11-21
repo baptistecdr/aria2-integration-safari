@@ -10,7 +10,7 @@ struct Aria2ServerDecodingTests {
 
     @Test("Decodes a server serialized by the web extension")
     func decodesFullServer() throws {
-        // Shape produced by ExtensionOptions.serialize (src/models/server.ts), extra keys included.
+        // Shape produced by ExtensionOptions.serialize (src/domain/server.ts), extra keys included.
         let server = try decode("""
         {
           "uuid": "0b4c5c1e-1d1e-4a57-9a3a-1f0f6a0c1a11",
