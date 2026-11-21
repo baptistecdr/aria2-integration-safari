@@ -1,45 +1,30 @@
-import Aria2 from "@baptistecdr/aria2";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { captureTorrentFromFile, captureURL } from "@/aria2-extension";
-import { useCurrentTab } from "@/current-tab-provider";
-import { useExtensionOptions } from "@/extension-options-provider";
-import { Server } from "@/models/server";
+import { Server } from "@/domain/server";
 import ServerAddTasks from "@/popup/components/server-add-tasks";
+import type { Aria2Client } from "@/services/aria2-client";
+import { captureTorrentFile, captureUrl } from "@/services/capture";
+import { useCurrentTab } from "@/shared/ui/current-tab-provider";
 
-const aria2 = vi.mockObject(new Aria2({}));
-const server = vi.mockObject(Server.create({ uuid: "uuid", name: "TestServer" }));
+// A plain object is used instead of `vi.mockObject(new Aria2(...))`: auto-mocking a real Aria2 instance
+// (which extends EventTarget) makes vitest's deep-equal assertions on it (toHaveBeenCalledWith) pathologically
+// slow (seconds per assertion) once certain other modules are also loaded in the same test file.
+const aria2 = { call: vi.fn(), multicall: vi.fn() } as unknown as Aria2Client;
+const server = Server.create({ uuid: "uuid", name: "TestServer" });
 
-vi.mock("@/aria2-extension", () => ({
-  captureURL: vi.fn(),
-  captureTorrentFromFile: vi.fn(),
+vi.mock("@/services/capture", () => ({
+  captureUrl: vi.fn(),
+  captureTorrentFile: vi.fn(),
 }));
 
-vi.mock("@/extension-options-provider", () => ({
-  useExtensionOptions: vi.fn(),
-}));
-
-vi.mock("@/current-tab-provider", () => ({
+vi.mock("@/shared/ui/current-tab-provider", () => ({
   useCurrentTab: vi.fn(),
 }));
 
-vi.mock("@/i18n", () => ({
+vi.mock("@/platform/i18n", () => ({
   default: vi.fn((key: string, ...args: any[]) => `${key}${args.length ? `:${args.join(",")}` : ""}`),
 }));
-
-const setupDefaultExtensionOptions = (overrides = {}) => {
-  vi.mocked(useExtensionOptions).mockReturnValue({
-    extensionOptions: {
-      notifyUrlIsAdded: true,
-      notifyFileIsAdded: true,
-      notifyErrorOccurs: true,
-      ...overrides,
-      incognitoModeOptions: { overwriteRpcParameters: false },
-    } as any,
-    setExtensionOptions: vi.fn(),
-  });
-};
 
 const setupDefaultCurrentTab = (overrides = {}) => {
   vi.mocked(useCurrentTab).mockReturnValue({
@@ -61,7 +46,6 @@ const ADD_BUTTON_TEXT = "addTaskAdd";
 describe("ServerAddTasks", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setupDefaultExtensionOptions();
     setupDefaultCurrentTab();
   });
 
@@ -82,7 +66,7 @@ describe("ServerAddTasks", () => {
   describe("URL Form Submission", () => {
     it("does nothing when submitting empty URL form", async () => {
       const user = userEvent.setup();
-      vi.mocked(captureURL).mockResolvedValue({});
+      vi.mocked(captureUrl).mockResolvedValue({});
 
       render(<ServerAddTasks aria2={aria2} server={server} />);
       const textarea = screen.getByPlaceholderText(URL_TEXTAREA_PLACEHOLDER);
@@ -91,12 +75,12 @@ describe("ServerAddTasks", () => {
       await user.clear(textarea);
       await user.click(submitButton);
 
-      expect(captureURL).not.toHaveBeenCalled();
+      expect(captureUrl).not.toHaveBeenCalled();
     });
 
     it("submits single URL successfully", async () => {
       const user = userEvent.setup();
-      vi.mocked(captureURL).mockResolvedValue({});
+      vi.mocked(captureUrl).mockResolvedValue({});
 
       render(<ServerAddTasks aria2={aria2} server={server} />);
       const textarea = screen.getByPlaceholderText(URL_TEXTAREA_PLACEHOLDER) as HTMLTextAreaElement;
@@ -106,14 +90,14 @@ describe("ServerAddTasks", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(captureURL).toHaveBeenNthCalledWith(1, aria2, server, "http://test1.com", "", "", false);
+        expect(captureUrl).toHaveBeenNthCalledWith(1, aria2, server, { url: "http://test1.com", incognito: false });
         expect(textarea.value).toBe("");
       });
     });
 
     it("submits multiple URLs successfully", async () => {
       const user = userEvent.setup();
-      vi.mocked(captureURL).mockResolvedValue({});
+      vi.mocked(captureUrl).mockResolvedValue({});
 
       render(<ServerAddTasks aria2={aria2} server={server} />);
       const textarea = screen.getByPlaceholderText(URL_TEXTAREA_PLACEHOLDER) as HTMLTextAreaElement;
@@ -123,11 +107,28 @@ describe("ServerAddTasks", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(captureURL).toHaveBeenCalledTimes(3);
-        expect(captureURL).toHaveBeenNthCalledWith(1, aria2, server, "http://test1.com", "", "", false);
-        expect(captureURL).toHaveBeenNthCalledWith(2, aria2, server, "http://test2.com", "", "", false);
-        expect(captureURL).toHaveBeenNthCalledWith(3, aria2, server, "http://test3.com", "", "", false);
+        expect(captureUrl).toHaveBeenCalledTimes(3);
+        expect(captureUrl).toHaveBeenNthCalledWith(1, aria2, server, { url: "http://test1.com", incognito: false });
+        expect(captureUrl).toHaveBeenNthCalledWith(2, aria2, server, { url: "http://test2.com", incognito: false });
+        expect(captureUrl).toHaveBeenNthCalledWith(3, aria2, server, { url: "http://test3.com", incognito: false });
         expect(textarea.value).toBe("");
+      });
+    });
+
+    it("logs the error when a URL can't be added", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const user = userEvent.setup();
+      vi.mocked(captureUrl).mockRejectedValue(new Error("Network error"));
+
+      render(<ServerAddTasks aria2={aria2} server={server} />);
+      const textarea = screen.getByPlaceholderText(URL_TEXTAREA_PLACEHOLDER);
+      const submitButton = screen.getAllByText(ADD_BUTTON_TEXT)[0];
+
+      await user.type(textarea, "http://test.com");
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(consoleErrorSpy).toHaveBeenCalled();
       });
     });
   });
@@ -140,12 +141,12 @@ describe("ServerAddTasks", () => {
 
       await user.click(submitButton);
 
-      expect(captureTorrentFromFile).not.toHaveBeenCalled();
+      expect(captureTorrentFile).not.toHaveBeenCalled();
     });
 
     it("submits single file successfully", async () => {
       const user = userEvent.setup();
-      vi.mocked(captureTorrentFromFile).mockResolvedValue({});
+      vi.mocked(captureTorrentFile).mockResolvedValue({});
 
       render(<ServerAddTasks aria2={aria2} server={server} />);
       const fileInput = screen.getByLabelText(FILE_INPUT_LABEL) as HTMLInputElement;
@@ -156,13 +157,13 @@ describe("ServerAddTasks", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(captureTorrentFromFile).toHaveBeenNthCalledWith(1, aria2, server, file, false);
+        expect(captureTorrentFile).toHaveBeenNthCalledWith(1, aria2, server, file, false);
       });
     });
 
     it("submits multiple files successfully", async () => {
       const user = userEvent.setup();
-      vi.mocked(captureTorrentFromFile).mockResolvedValue({});
+      vi.mocked(captureTorrentFile).mockResolvedValue({});
 
       render(<ServerAddTasks aria2={aria2} server={server} />);
       const fileInput = screen.getByLabelText(FILE_INPUT_LABEL) as HTMLInputElement;
@@ -174,9 +175,27 @@ describe("ServerAddTasks", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(captureTorrentFromFile).toHaveBeenCalledTimes(2);
-        expect(captureTorrentFromFile).toHaveBeenNthCalledWith(1, aria2, server, file1, false);
-        expect(captureTorrentFromFile).toHaveBeenNthCalledWith(2, aria2, server, file2, false);
+        expect(captureTorrentFile).toHaveBeenCalledTimes(2);
+        expect(captureTorrentFile).toHaveBeenNthCalledWith(1, aria2, server, file1, false);
+        expect(captureTorrentFile).toHaveBeenNthCalledWith(2, aria2, server, file2, false);
+      });
+    });
+
+    it("logs the error when a file can't be added", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const user = userEvent.setup();
+      vi.mocked(captureTorrentFile).mockRejectedValue(new Error("File error"));
+
+      render(<ServerAddTasks aria2={aria2} server={server} />);
+      const fileInput = screen.getByLabelText(FILE_INPUT_LABEL) as HTMLInputElement;
+      const submitButton = screen.getAllByText(ADD_BUTTON_TEXT)[1];
+      const file = createTestFile("test.torrent");
+
+      await user.upload(fileInput, file);
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(consoleErrorSpy).toHaveBeenCalled();
       });
     });
   });
