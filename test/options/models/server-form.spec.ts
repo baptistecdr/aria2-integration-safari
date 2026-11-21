@@ -43,6 +43,7 @@ describe("server form", () => {
       secret: "s3cr3t",
       rpcParameters: { split: "5" },
       incognitoModeOptions: ServerIncognitoModeOptions.create({
+        automaticallyPurgeDownloads: true,
         overwriteRpcParameters: true,
         rpcParameters: { split: "1" },
       }),

@@ -142,6 +142,17 @@ function ServerOptionsForm({ server, alertProps, onCloseAlert, onSave, onDelete 
       </div>
 
       <Row className="mb-3">
+        <Form.Group controlId="form-im-automatically-purge-downloads">
+          <Form.Check
+            label={i18n("serverOptionsAutomaticallyPurgeDownloads")}
+            aria-label={i18n("serverOptionsAutomaticallyPurgeDownloads")}
+            checked={values.incognitoAutomaticallyPurgeDownloads}
+            onChange={(e) => set("incognitoAutomaticallyPurgeDownloads", e.target.checked)}
+          />
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
         <Form.Group controlId="form-im-overwrite-rpc-parameters">
           <Form.Check
             label={i18n("serverOptionsOverwriteRpcParameters")}

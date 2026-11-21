@@ -29,7 +29,7 @@ describe("ServerOptionsTab", () => {
     path: "/jsonrpc",
     secret: "secret123",
     rpcParameters: { split: "5" },
-    incognitoModeOptions: ServerIncognitoModeOptions.create({ overwriteRpcParameters: true, rpcParameters: { split: "6" } }),
+    incognitoModeOptions: ServerIncognitoModeOptions.create({ automaticallyPurgeDownloads: true, overwriteRpcParameters: true, rpcParameters: { split: "6" } }),
   });
   const deleteServer = vi.fn().mockResolvedValue(undefined);
 
@@ -54,6 +54,7 @@ describe("ServerOptionsTab", () => {
     expect(screen.getByLabelText("serverOptionsUrl")).toHaveValue("https://localhost:6800/jsonrpc");
     expect(screen.getByLabelText("serverOptionsSecret")).toHaveValue("secret123");
     const serverOptionsRpcParameters = await screen.findAllByLabelText("serverOptionsRpcParameters");
+    expect(screen.getByLabelText("serverOptionsAutomaticallyPurgeDownloads")).toBeChecked();
     expect(screen.getByLabelText("serverOptionsOverwriteRpcParameters")).toBeChecked();
     expect(serverOptionsRpcParameters).toHaveLength(2);
     expect(serverOptionsRpcParameters[0]).toHaveValue("split: 5");
@@ -186,6 +187,7 @@ describe("ServerOptionsTab", () => {
           proxy: "http://localhost:8080",
         },
         incognitoModeOptions: ServerIncognitoModeOptions.create({
+          automaticallyPurgeDownloads: true,
           overwriteRpcParameters: true,
           rpcParameters: {
             split: "6",
@@ -343,6 +345,7 @@ describe("ServerOptionsTab", () => {
       extensionOptions,
       expect.objectContaining({
         incognitoModeOptions: ServerIncognitoModeOptions.create({
+          automaticallyPurgeDownloads: true,
           overwriteRpcParameters: false,
           rpcParameters: { split: "6" },
         }),

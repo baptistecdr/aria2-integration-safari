@@ -10,6 +10,7 @@ export interface ServerFormValues {
   path: string;
   secret: string;
   rpcParameters: string;
+  incognitoAutomaticallyPurgeDownloads: boolean;
   incognitoOverwriteRpcParameters: boolean;
   incognitoRpcParameters: string;
 }
@@ -56,6 +57,7 @@ export function toServerFormValues(server: Server): ServerFormValues {
     path: server.path,
     secret: server.secret,
     rpcParameters: formatRpcParameters(server.rpcParameters),
+    incognitoAutomaticallyPurgeDownloads: server.incognitoModeOptions?.automaticallyPurgeDownloads ?? false,
     incognitoOverwriteRpcParameters: server.incognitoModeOptions?.overwriteRpcParameters ?? false,
     incognitoRpcParameters: formatRpcParameters(server.incognitoModeOptions?.rpcParameters ?? {}),
   };
@@ -72,6 +74,7 @@ export function fromServerFormValues(uuid: string, values: ServerFormValues): Se
     secret: values.secret,
     rpcParameters: parseRpcParameters(values.rpcParameters),
     incognitoModeOptions: ServerIncognitoModeOptions.create({
+      automaticallyPurgeDownloads: values.incognitoAutomaticallyPurgeDownloads,
       overwriteRpcParameters: values.incognitoOverwriteRpcParameters,
       rpcParameters: parseRpcParameters(values.incognitoRpcParameters),
     }),
