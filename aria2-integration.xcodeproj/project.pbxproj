@@ -37,6 +37,8 @@
 		D267EAAE2B49BE5A00677AD6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D267EA652B49BE5A00677AD6 /* ViewController.swift */; };
 		D267EAAF2B49BE5A00677AD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D267EA662B49BE5A00677AD6 /* Assets.xcassets */; };
 		D267EAB02B49BE5A00677AD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D267EA662B49BE5A00677AD6 /* Assets.xcassets */; };
+		A1C0FFEE0000000000000002 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = A1C0FFEE0000000000000001 /* AppIcon.icon */; };
+		A1C0FFEE0000000000000003 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = A1C0FFEE0000000000000001 /* AppIcon.icon */; };
 		D26EA6F82B49C58E00DC391A /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26EA6F72B49C58E00DC391A /* SafariWebExtensionHandler.swift */; };
 		D26EA6F92B49C58E00DC391A /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26EA6F72B49C58E00DC391A /* SafariWebExtensionHandler.swift */; };
 		D28841382B49C2FB005DA686 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = D28841312B49C2FB005DA686 /* manifest.json */; };
@@ -133,6 +135,7 @@
 		D267EA642B49BE5A00677AD6 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
 		D267EA652B49BE5A00677AD6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D267EA662B49BE5A00677AD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1C0FFEE0000000000000001 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		D267EA762B49BE5A00677AD6 /* Aria2 Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aria2 Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D267EA792B49BE5A00677AD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D267EA7B2B49BE5A00677AD6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -269,6 +272,7 @@
 			children = (
 				D267EA652B49BE5A00677AD6 /* ViewController.swift */,
 				D267EA662B49BE5A00677AD6 /* Assets.xcassets */,
+				A1C0FFEE0000000000000001 /* AppIcon.icon */,
 				D267EA5F2B49BE5A00677AD6 /* Resources */,
 			);
 			path = "Shared (App)";
@@ -566,6 +570,7 @@
 				D267EAA52B49BE5A00677AD6 /* Main.html in Resources */,
 				D267EAAB2B49BE5A00677AD6 /* Script.js in Resources */,
 				D267EAAF2B49BE5A00677AD6 /* Assets.xcassets in Resources */,
+				A1C0FFEE0000000000000002 /* AppIcon.icon in Resources */,
 				D267EA822B49BE5A00677AD6 /* Main.storyboard in Resources */,
 				D255905C2B7006C800EEB118 /* Icon.png in Resources */,
 				D267EAA92B49BE5A00677AD6 /* Style.css in Resources */,
@@ -581,6 +586,7 @@
 				D267EA8E2B49BE5A00677AD6 /* Main.storyboard in Resources */,
 				D267EAAC2B49BE5A00677AD6 /* Script.js in Resources */,
 				D267EAB02B49BE5A00677AD6 /* Assets.xcassets in Resources */,
+				A1C0FFEE0000000000000003 /* AppIcon.icon in Resources */,
 				D267EAA62B49BE5A00677AD6 /* Main.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
