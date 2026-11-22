@@ -2,7 +2,7 @@
   "name": "aria2-integration",
   "private": true,
   "type": "module",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "scripts": {
     "lint": "biome check",
     "lint:fix": "biome check --fix --unsafe",
