@@ -5,7 +5,7 @@
   "homepage_url": "https://github.com/baptistecdr/aria2-extensions",
   "description": "__MSG_extDescription__",
   "version": "2.1.1",
-  "version_name": "2.1.1 (52756bb)",
+  "version_name": "2.1.1 (6fa99c2)",
   "default_locale": "en",
   "permissions": ["activeTab", "alarms", "contextMenus", "cookies", "nativeMessaging", "storage"],
   "host_permissions": ["*://*/*"],
