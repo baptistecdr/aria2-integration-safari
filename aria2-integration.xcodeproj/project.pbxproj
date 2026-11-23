@@ -742,7 +742,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS (Share Extension)/ShareExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Share Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration";
@@ -753,7 +753,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				PRODUCT_BUNDLE_IDENTIFIER = "eu.bcosp.aria2-integration.ShareExtension";
 				PRODUCT_NAME = "Aria2 Integration Share Extension";
 				SDKROOT = iphoneos;
@@ -771,7 +771,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS (Share Extension)/ShareExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Share Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration";
@@ -782,7 +782,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				PRODUCT_BUNDLE_IDENTIFIER = "eu.bcosp.aria2-integration.ShareExtension";
 				PRODUCT_NAME = "Aria2 Integration Share Extension";
 				SDKROOT = iphoneos;
@@ -800,7 +800,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Share Extension)/ShareExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -813,7 +813,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				PRODUCT_BUNDLE_IDENTIFIER = "eu.bcosp.aria2-integration.ShareExtension";
 				PRODUCT_NAME = "Aria2 Integration Share Extension";
 				SDKROOT = macosx;
@@ -830,7 +830,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Share Extension)/ShareExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -843,7 +843,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				PRODUCT_BUNDLE_IDENTIFIER = "eu.bcosp.aria2-integration.ShareExtension";
 				PRODUCT_NAME = "Aria2 Integration Share Extension";
 				SDKROOT = macosx;
@@ -979,7 +979,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration Extension";
@@ -990,7 +990,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1012,7 +1012,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration Extension";
@@ -1023,7 +1023,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1047,7 +1047,7 @@
 				CODE_SIGN_ENTITLEMENTS = "aria2-integration (iOS).entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration";
@@ -1062,7 +1062,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1088,7 +1088,7 @@
 				CODE_SIGN_ENTITLEMENTS = "aria2-integration (iOS).entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Aria2 Integration";
@@ -1103,7 +1103,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1128,7 +1128,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1141,7 +1141,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1163,7 +1163,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/aria2-integration.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1176,7 +1176,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1199,7 +1199,7 @@
 				CODE_SIGN_ENTITLEMENTS = "macOS (App)/aria2-integration.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1213,7 +1213,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1237,7 +1237,7 @@
 				CODE_SIGN_ENTITLEMENTS = "macOS (App)/aria2-integration.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "6fa99c2";
+				CURRENT_PROJECT_VERSION = "9e1354e";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1251,7 +1251,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = "2.1.1";
+				MARKETING_VERSION = "2.1.2";
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
